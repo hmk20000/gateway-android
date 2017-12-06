@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#1B1B1B">
+    <RelativeLayout
+        android:background="#1B1B1B"
+        android:id="@+id/actionbar"
+        android:orientation="horizontal"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
+        android:layout_weight="0">
+        <ImageButton
+            android:background="#1B1B1B"
+            android:id="@+id/backBtn"
+            android:layout_height="wrap_content"
+            android:layout_width="40dp"
+            android:src="@drawable/back"/>
+        <TextView
+            android:id="@+id/titleBar"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignBottom="@+id/backBtn"
+            android:gravity="center_vertical"
+            android:textAlignment="center"
+            android:textSize="20dp"
+            android:textColor="#FFFFFF"
+            android:text="되돌리기"/>
+    </RelativeLayout>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/fragment_view_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/actionbar">
+
+    </android.support.v7.widget.RecyclerView>
+</RelativeLayout>

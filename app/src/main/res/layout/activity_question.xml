@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--<com.ssomai.android.scalablelayout.ScalableLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">-->
+
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id = "@+id/layout_question"
+        android:weightSum="1"
+        android:background="#555555">
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/button_finish"
+            android:background="@drawable/mute"
+            android:layout_gravity="center"
+            android:layout_margin="10dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Question"
+            android:textSize="25dp"
+            android:textColor="#B4F5FF"
+            android:textAlignment="center"
+            android:drawableBottom="#FFFFFF"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:id="@+id/textView2" />
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="15dp"
+            android:layout_below="@+id/textView2"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true">
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/layout"
+                android:weightSum="1"
+                android:paddingRight="5dp"
+                android:paddingLeft="5dp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:scrollbars="vertical">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="#32C8FF"
+                    android:text="도입"
+                    android:id="@+id/title1"
+                    android:layout_marginBottom="5dp"
+                    android:layout_below="@+id/textView2"
+                    android:layout_alignLeft="@+id/textView2"
+                    android:layout_alignStart="@+id/textView2" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="내용"
+                    android:textColor="#FFFFFF"
+                    android:id="@+id/question1"
+                    android:layout_marginBottom="10dp"
+                    android:layout_weight="0.22"
+                    android:layout_alignLeft="@+id/textView2"
+                    android:layout_alignStart="@+id/textView2"
+                    android:layout_below="@+id/title1"
+                    android:layout_toLeftOf="@+id/button_finish"
+                    android:layout_toStartOf="@+id/button_finish" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="#32C8FF"
+                    android:text="심화"
+                    android:id="@+id/title2"
+                    android:layout_marginBottom="5dp"
+                    android:layout_below="@+id/question1"
+                    android:layout_alignLeft="@+id/question1"
+                    android:layout_alignStart="@+id/question1"
+                    android:layout_toLeftOf="@+id/button_finish"
+                    android:layout_toStartOf="@+id/button_finish" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="내용"
+                    android:textColor="#FFFFFF"
+                    android:id="@+id/question2"
+                    android:layout_marginBottom="10dp"
+                    android:layout_toLeftOf="@+id/button_finish"
+                    android:layout_below="@+id/title2"
+                    android:layout_alignLeft="@+id/title2"
+                    android:layout_alignStart="@+id/title2" />
+            </LinearLayout>
+        </ScrollView>
+    </RelativeLayout>
+<!--
+</com.ssomai.android.scalablelayout.ScalableLayout>-->
