@@ -27,6 +27,8 @@ public class Fragment_Home extends Fragment{
     private RecyclerView.LayoutManager categoryListLayoutManager;
     private ArrayList<CategoryVO> list;
 
+    public Fragment_Home(){    }
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);

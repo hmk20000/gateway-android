@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import java.util.List;
 
@@ -58,6 +59,9 @@ public class CategoryListAdapter extends RecyclerView.Adapter<CategoryListHolder
         holder.Thumbnail.setImageBitmap(scale);
         holder.Title.setText(itemList.get(position).getTitle());
         holder.subTitle.setText(itemList.get(position).getSubTitle());
+
+        holder.Thumbnail.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        holder.Thumbnail.getLayoutParams().height = 270;
 
         orientationPref = context.getSharedPreferences("orientationPref", context.MODE_PRIVATE);
         orientationEditor = orientationPref.edit();

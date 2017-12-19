@@ -27,14 +27,16 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
     compile 'com.squareup.okhttp3:okhttp:3.9.1'
-    compile 'com.google.code.gson:gson:2.3.1'
+    compile 'com.google.code.gson:gson:2.8.0'
     compile 'com.wang.avi:library:2.1.3'
     compile 'cn.jzvd:jiaozivideoplayer:6.2.0_preview'
     compile 'io.github.lizhangqu:coreprogress:1.0.2'
-    compile("com.github.hotchemi:permissionsdispatcher:3.0.1") {
-        // if you don't use android.app.Fragment you can exclude support for them
-        exclude module: "support-v13"
-    }
-    annotationProcessor "com.github.hotchemi:permissionsdispatcher-processor:3.0.1"
+    compile 'com.yanzhenjie:permission:1.1.2'
+    compile 'com.liulishuo.filedownloader:library:1.6.8'
+    compile 'com.mikhaellopez:circularprogressbar:1.1.1'
+
+    compile 'com.google.firebase:firebase-core:11.6.2'
+    compile 'com.google.firebase:firebase-messaging:11.6.2'
 }
 apply plugin: 'realm-android'
+apply plugin: 'com.google.gms.google-services'

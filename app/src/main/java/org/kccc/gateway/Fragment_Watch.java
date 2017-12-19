@@ -1,12 +1,21 @@
 package org.kccc.gateway;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Dialog;
 import android.app.Fragment;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -14,6 +23,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -34,7 +44,10 @@ import android.widget.MediaController;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import com.mikhaellopez.circularprogressbar.CircularProgressBar;
+import com.yanzhenjie.permission.AndPermission;
+import com.yanzhenjie.permission.Permission;
 
 import java.io.File;
 import java.io.IOException;
@@ -43,6 +56,7 @@ import java.util.List;
 import cn.jzvd.JZUserAction;
 import cn.jzvd.JZUserActionStandard;
 import cn.jzvd.JZVideoPlayer;
+import cn.jzvd.JZVideoPlayerManager;
 import cn.jzvd.JZVideoPlayerStandard;
 import io.github.lizhangqu.coreprogress.ProgressHelper;
 import io.github.lizhangqu.coreprogress.ProgressUIListener;
@@ -73,29 +87,30 @@ public class Fragment_Watch extends Fragment implements View.OnClickListener {
     private TextView keyWord;
     private TextView time;
     private TextView description;
-    private ImageButton fullScreen;
+//    private ImageButton fullScreen;
     private ImageButton back;
     private ImageButton favorite;
     private ImageButton download;
     private ImageButton share;
+
     private Button question;
     private Button next;
 
-    private int category;
-    private int index;
+//    private int category;
+//    private int index;
     private int flag;
 
     private String MOVIE_URL = "";
     private String MOVIE_INTERNAL_PATH;
-    private String fileName = "";
+//    private String fileName = "";
 
-    private SharedPreferences downloadPref;
-    private SharedPreferences.Editor downloadEditor;
-    private SharedPreferences videoPref;
-    private SharedPreferences.Editor videoEditor;
-    private int curPos;
-    private boolean isPlaying;
-    private boolean isError;
+//    private SharedPreferences downloadPref;
+//    private SharedPreferences.Editor downloadEditor;
+//    private SharedPreferences videoPref;
+//    private SharedPreferences.Editor videoEditor;
+//    private int curPos;
+//    private boolean isPlaying;
+//    private boolean isError;
 
     private Dialog dialog;
     private RecyclerView nextView;
@@ -114,6 +129,7 @@ public class Fragment_Watch extends Fragment implements View.OnClickListener {
     private Display display;
 
     private  ProgressBar downloadProgress;
+    private CircularProgressBar circularProgressBar;
 
     JZVideoPlayerStandard jzVideoPlayerStandard;
 
@@ -122,21 +138,24 @@ public class Fragment_Watch extends Fragment implements View.OnClickListener {
     private ContentsVO contentsVO;
 
     private MediaController mediaController;
-    public Fragment_Watch(int category, int position, String URL, String fileName, int flag) {
-        this.category = category;
-        this.index = position;
-        this.MOVIE_URL = URL;
-        this.fileName = fileName;
-        this.flag = flag;
-    }
-//    public Fragment_Watch(ContentsVO contentsVO, int flag) {
-//        this.contentsVO = contentsVO;
-//        this.category = this.contentsVO.getCategory();
-//        this.index = this.contentsVO.getIndex();
-//        this.MOVIE_URL = this.contentsVO.getURL();
-//        this.fileName = this.contentsVO.getTitle();
+    public Fragment_Watch(){}
+
+//    public Fragment_Watch(int category, int position, String URL, String fileName, int flag) {
+//        this.category = category;
+//        this.index = position;
+//        this.MOVIE_URL = URL;
+//        this.fileName = fileName;
 //        this.flag = flag;
 //    }
+
+    public Fragment_Watch(ContentsVO contentsVO, int flag) {
+        this.contentsVO = contentsVO;
+//        this.category = contentsVO.getCategory();
+//        this.index = contentsVO.getIndex();
+//        this.MOVIE_URL = contentsVO.getURL();
+//        this.fileName = contentsVO.getTitle();
+        this.flag = flag;
+    }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -150,74 +169,87 @@ public class Fragment_Watch extends Fragment implements View.OnClickListener {
         super.onResume();
 
 //        setVideoPos();
-        isPlaying = videoPref.getBoolean("curPlay", false);
+//        isPlaying = videoPref.getBoolean("curPlay", false);
 //        if(isPlaying) {
 //            videoView.start();
 //        }
 
-        videoEditor = videoPref.edit();
-        videoEditor.putInt("curPos",curPos);
-        videoEditor.commit();
+//        videoEditor = videoPref.edit();
+//        videoEditor.putInt("curPos",curPos);
+//        videoEditor.commit();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Realm realm = Realm.getDefaultInstance();
 
-        final ContentsVO realmContentsVO = realm.where(ContentsVO.class)
-                .equalTo("category",category)
-                .equalTo("index",index)
-                .findFirst();
-
-        this.contentsVO = realm.copyFromRealm(realmContentsVO);
+//        Realm realm = Realm.getDefaultInstance();
+//
+//        final ContentsVO realmContentsVO = realm.where(ContentsVO.class)
+//                .equalTo("category",contentsVO.getCategory())
+//                .equalTo("index",contentsVO.getIndex())
+//                .findFirst();
+//
+//        this.contentsVO = realm.copyFromRealm(realmContentsVO);
 
         MOVIE_URL = "http://cccvlm.com/sfproject/movies/kor/" + contentsVO.getURL();
 
         super.onCreateView(inflater, container, savedInstanceState);
-        if(category==0) {
-            view = inflater.inflate(R.layout.fragment_watch_1, container, false);
+
+        switch (contentsVO.getCategory()){
+            case 0:
+                view = inflater.inflate(R.layout.fragment_watch_1, container, false);
 //            contentsVO = DataBaseHandler.getInstance(view.getContext()).read(category, index);
-            keyWord = (TextView) view.findViewById(R.id.keyWord);
-            keyWord.setText(contentsVO.getKeyWord());
-            question = (Button)view.findViewById(R.id.questionBtn);
-            next = (Button)view.findViewById(R.id.nextBtn);
-            question.setOnClickListener(this);
-            next.setOnClickListener(this);
-        }
-        else if(category == 1||category==2){
-            view = inflater.inflate(R.layout.fragment_watch_2, container, false);
+                keyWord = (TextView) view.findViewById(R.id.keyWord);
+                keyWord.setText(contentsVO.getKeyWord());
+                question = (Button)view.findViewById(R.id.questionBtn);
+                next = (Button)view.findViewById(R.id.nextBtn);
+                question.setOnClickListener(this);
+                next.setOnClickListener(this);
+                break;
+            case 1:case 2:
+                view = inflater.inflate(R.layout.fragment_watch_2, container, false);
 //            contentsVO = DataBaseHandler.getInstance(view.getContext()).read(category, index);
-            question = (Button)view.findViewById(R.id.questionBtn);
-            next = (Button)view.findViewById(R.id.nextBtn);
-            question.setOnClickListener(this);
-            next.setOnClickListener(this);
-        }
-
-        else if(category == 3||category==4){
-            view = inflater.inflate(R.layout.fragment_watch_3, container, false);
+                question = (Button)view.findViewById(R.id.questionBtn);
+                next = (Button)view.findViewById(R.id.nextBtn);
+                question.setOnClickListener(this);
+                next.setOnClickListener(this);
+                break;
+            case 3:case 4:
+                view = inflater.inflate(R.layout.fragment_watch_3, container, false);
 //            contentsVO = DataBaseHandler.getInstance(view.getContext()).read(category, index);
+                break;
         }
 
-        MOVIE_INTERNAL_PATH = view.getContext().getFilesDir().getAbsolutePath()+"/"+fileName+".mp4";
+//        MOVIE_INTERNAL_PATH = view.getContext().getFilesDir().getAbsolutePath()+"/"+fileName+".mp4";
+//        MOVIE_INTERNAL_PATH = Environment.getExternalStorageDirectory() + "/Android/data/org.kccc.gateway/cache/"+fileName+".mp4";
+        MOVIE_INTERNAL_PATH = Environment.getExternalStorageDirectory() + "/Android/data/org.kccc.gateway/cache/"+App.md5(contentsVO.getTitle().getBytes());
 
-        isError = false;
+//        isError = false;
 
-        videoPref = view.getContext().getSharedPreferences("videoPos", view.getContext().MODE_PRIVATE);
-        downloadPref = PreferenceManager.getDefaultSharedPreferences(view.getContext());
+//        videoPref = view.getContext().getSharedPreferences("videoPos", view.getContext().MODE_PRIVATE);
+//        downloadPref = PreferenceManager.getDefaultSharedPreferences(view.getContext());
 
         titleBar = (TextView) view.findViewById(R.id.titleBar);
-        title = (TextView) view.findViewById(R.id.title);
+        title = (TextView) view.findViewById(R.id.Main_title);
         subTitle = (TextView) view.findViewById(R.id.subTitle);
         time = (TextView)view.findViewById(R.id.time);
         description = (TextView) view.findViewById(R.id.description);
 
         videoContainer = (RelativeLayout)view.findViewById(R.id.videoContainer);
-        fullScreen = (ImageButton)view.findViewById(R.id.fullScreen);
+//        fullScreen = (ImageButton)view.findViewById(R.id.fullScreen);
         back = (ImageButton)view.findViewById(R.id.backBtn);
         favorite = (ImageButton)view.findViewById(R.id.favoriteBtn);
         download = (ImageButton)view.findViewById(R.id.downloadBtn);
         share = (ImageButton)view.findViewById(R.id.shareBtn);
-        downloadProgress = (ProgressBar)view.findViewById(R.id.downloadProgress);
+//        downloadProgress = (ProgressBar)view.findViewById(R.id.downloadProgress);
+
+        circularProgressBar = (CircularProgressBar)view.findViewById(R.id.yourCircularProgressbar);
+//        circularProgressBar.setColor(ContextCompat.getColor(this, R.color.progressBarColor));
+//        circularProgressBar.setBackgroundColor(ContextCompat.getColor(this, R.color.backgroundProgressBarColor));
+//        circularProgressBar.setProgressBarWidth(getResources().getDimension(R.dimen.progressBarWidth));
+//        circularProgressBar.setBackgroundProgressBarWidth(getResources().getDimension(R.dimen.backgroundProgressBarWidth));
+        circularProgressBar.setVisibility(View.INVISIBLE);
+
 
 //        videoView = (VideoView) view.findViewById(R.id.videoView);
 
@@ -244,15 +276,18 @@ public class Fragment_Watch extends Fragment implements View.OnClickListener {
             fullScreen.setVisibility(View.GONE);
         }*/
 
-        realm.close();
+//        realm.close();
 
         return view;
     }
 
     public void setVideoPath(ContentsVO contentsVO, View view){
 
+        //다운로드
+        String Play_url = contentsVO.getDownload()==1?MOVIE_INTERNAL_PATH:MOVIE_URL;
+
         jzVideoPlayerStandard = (JZVideoPlayerStandard) view.findViewById(R.id.videoplayer);
-        jzVideoPlayerStandard.setUp(MOVIE_URL, JZVideoPlayerStandard.SCREEN_WINDOW_NORMAL);
+        jzVideoPlayerStandard.setUp(Play_url, JZVideoPlayerStandard.SCREEN_WINDOW_NORMAL);
 //                , JZVideoPlayerStandard.SCREEN_WINDOW_NORMAL, contentsVO.getTitle());
 
         Bitmap thumbImage = new ThumbnailHandler(this.view.getContext()).getBitmapThumbnail(contentsVO,512);
@@ -260,6 +295,8 @@ public class Fragment_Watch extends Fragment implements View.OnClickListener {
         jzVideoPlayerStandard.thumbImageView.setImageBitmap(thumbImage);
         jzVideoPlayerStandard.thumbImageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         JZVideoPlayer.setJzUserAction(new MyUserActionStandard());
+        JZVideoPlayer.SAVE_PROGRESS = false;
+//        JZVideoPlayer.FULLSCREEN_ORIENTATION = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
 
 //        jzVideoPlayerStandard.thumbImageView.setImage("http://p.qpic.cn/videoyun/0/2449_43b6f696980311e59ed467f22794e792_1/640");
 
@@ -308,6 +345,7 @@ public class Fragment_Watch extends Fragment implements View.OnClickListener {
     public void setContents(ContentsVO contentsVO){
         titleBar.setText(contentsVO.getTitle());
         title.setText(contentsVO.getTitle());
+//        title.setText("test");
         if(contentsVO.getSubTitle()!=null)
             subTitle.setText("("+contentsVO.getSubTitle()+")");
         else
@@ -401,16 +439,16 @@ public class Fragment_Watch extends Fragment implements View.OnClickListener {
 
         Realm realm = Realm.getDefaultInstance();
 
-        final ContentsVO contentsVO = realm.where(ContentsVO.class)
-                .equalTo("category",category)
-                .equalTo("index",index)
+        final ContentsVO realmContentsVO = realm.where(ContentsVO.class)
+                .equalTo("category",this.contentsVO.getCategory())
+                .equalTo("index",this.contentsVO.getIndex())
                 .findFirst();
 
         Intent intent;
-        videoEditor = videoPref.edit();
-        downloadEditor = downloadPref.edit();
+//        videoEditor = videoPref.edit();
+//        downloadEditor = downloadPref.edit();
 
-        realm.beginTransaction();
+
         switch (v.getId()){
             case R.id.backBtn:
 //                JZVideoPlayerManager.
@@ -418,10 +456,10 @@ public class Fragment_Watch extends Fragment implements View.OnClickListener {
 
                 //videoEditor.putBoolean("curPlay", false);
                 //videoEditor.commit();
-                /*if(flag<4)
+                if(flag<4)
                     ((MainActivity)view.getContext()).fragmentReplaceWithMyVideo(flag);
-                else*/
-                    //((MainActivity)view.getContext()).fragmentReplaceWithCategory(contentsVO.getCategory());
+                else
+                    ((MainActivity)view.getContext()).fragmentReplaceWithCategory(contentsVO.getCategory());
                 break;
             case R.id.videoContainer:
 
@@ -440,8 +478,7 @@ public class Fragment_Watch extends Fragment implements View.OnClickListener {
 
             case R.id.favoriteBtn:
 
-
-
+//                realm.beginTransaction();
                 if(contentsVO.getFavorite() == 0) {
 
                     contentsVO.setFavorite(1);
@@ -457,36 +494,31 @@ public class Fragment_Watch extends Fragment implements View.OnClickListener {
                     favorite.setImageDrawable(getResources().getDrawable(R.drawable.heart));
                 }
 
+//                realm.commitTransaction();
 
-//                DataBaseHandler.getInstance(view.getContext()).updateFavorite(contentsVO);
+                RealmHelper realmHelper = new RealmHelper();
+                realmHelper.saveContents(contentsVO);
+
                 break;
 
             case R.id.downloadBtn:
-                ConnectivityManager manager =
-                        (ConnectivityManager)view.getContext().getSystemService(view.getContext().CONNECTIVITY_SERVICE);
-                NetworkInfo wifi = manager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+
+
+                //PermissionCheck
+                //https://github.com/yanzhenjie/AndPermission
+                AndPermission.with(MainActivity.getActivity())
+                        .requestCode(100)
+                        .permission(Permission.STORAGE)
+//                        .callback(listener)
+                        .start();
+
+                realm.beginTransaction();
 
                 DownloadStart(MOVIE_URL);
+                contentsVO.setDownload(1);
+                contentsVO.setDownloadDate(System.currentTimeMillis());
 
-//                FileDownloadUtils.getDefaultSaveRootPath();
-
-
-//                String saveDir = Environment.getExternalStorageDirectory() + "/GATEWAY/";
-//                DLManager.getInstance((MainActivity)view.getContext()).dlStart(MOVIE_URL,saveDir,null,new SimpleDListener(){
-//
-//
-//                    @Override
-//                    public void onStart(String fileName, String realUrl, int fileLength) {
-//                        pbDLs =  dialog.findViewById(R.id.main_dl_pb1);
-//                        pbDLs.setMax(fileLength);
-//                    }
-//
-//                    @Override
-//                    public void onProgress(int progress) {
-//                        pbDLs.setProgress(progress);
-//                    }
-//                });
-                // first: build a DownloadRequest:
+                realm.commitTransaction();
 
                 /*if(wifi.isConnected()) {
                     if (contentsVO.getDownload() == 0) {
@@ -551,7 +583,7 @@ public class Fragment_Watch extends Fragment implements View.OnClickListener {
 
             case R.id.questionBtn:
 //                videoEditor.putInt("curPos",videoView.getCurrentPosition());
-                videoEditor.commit();
+//                videoEditor.commit();
                 dialog = new Dialog(view.getContext(), R.style.NoActionBarDialog);
                 dialog.setContentView(R.layout.activity_question);
 
@@ -604,7 +636,7 @@ public class Fragment_Watch extends Fragment implements View.OnClickListener {
 
             case R.id.nextBtn:
 //                videoEditor.putInt("curPos",videoView.getCurrentPosition());
-                videoEditor.commit();
+//                videoEditor.commit();
 
                 dialog = new Dialog(view.getContext(), R.style.NoActionBarDialog);
                 dialog.setContentView(R.layout.activity_next);
@@ -633,11 +665,15 @@ public class Fragment_Watch extends Fragment implements View.OnClickListener {
                 dialog.show();
                 break;
         }
-        realm.commitTransaction();
+
         realm.close();
     }
 
+//    https://github.com/lizhangqu/CoreProgress
     private void DownloadStart(String url){
+        download.setVisibility(View.INVISIBLE);
+        circularProgressBar.setVisibility(View.VISIBLE);
+
         //client
         OkHttpClient okHttpClient = new OkHttpClient();
 //request builder
@@ -680,7 +716,15 @@ public class Fragment_Watch extends Fragment implements View.OnClickListener {
                         Log.e("TAG", "percent:" + percent);
                         Log.e("TAG", "speed:" + speed);
                         Log.e("TAG", "============= end ===============");
-                        downloadProgress.setProgress((int) (100 * percent));
+//                        downloadProgress.setProgress((int) (100 * percent));
+
+                        int animationDuration = 0; // 2500ms = 2,5s
+
+                        percent *= 100;
+                        circularProgressBar.setProgress(percent);
+
+//                      circularProgressBar.setProgressWithAnimation(100 * percent, animationDuration); // Default duration = 1500ms
+
                         Log.d("download INFO", "onUIProgressChanged: "+"numBytes:" + numBytes + " bytes" + "\ntotalBytes:" + totalBytes + " bytes" + "\npercent:" + percent * 100 + " %" + "\nspeed:" + speed * 1000 / 1024 / 1024 + " MB/秒");
                     }
 
@@ -688,6 +732,10 @@ public class Fragment_Watch extends Fragment implements View.OnClickListener {
                     @Override
                     public void onUIProgressFinish() {
                         super.onUIProgressFinish();
+                        download.setVisibility(View.VISIBLE);
+                        circularProgressBar.setVisibility(View.INVISIBLE);
+//                        Noty();
+
                         Log.e("TAG", "onUIProgressFinish:");
                         //Toast.makeText(MainActivity.getActivity(), "结束上传", Toast.LENGTH_SHORT).show();
                     }
@@ -695,7 +743,7 @@ public class Fragment_Watch extends Fragment implements View.OnClickListener {
                 });
                 //read the body to file
                 BufferedSource source = responseBody.source();
-                File outFile = new File(Environment.getExternalStorageDirectory(), "/"+fileName+".mp4");
+                File outFile = new File(MOVIE_INTERNAL_PATH);
                 Log.d("file_Path", "onResponse: "+outFile);
 //                File outFile = new File("sdcard/"+fileName+".mp4");
                 outFile.delete();
@@ -708,8 +756,27 @@ public class Fragment_Watch extends Fragment implements View.OnClickListener {
             }
         });
     }
+    private void Noty(){
+        NotificationManager notificationManager = (NotificationManager)MainActivity.getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
+        Intent intent = new Intent(MainActivity.getActivity(), MainActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(MainActivity.getActivity(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        Notification.Builder builder = new Notification.Builder(MainActivity.getActivity());
+        builder.setLargeIcon(BitmapFactory.decodeResource(getResources(),android.R.drawable.star_on));
+        builder.setSmallIcon(android.R.drawable.star_on);
+        builder.setTicker("알람 간단한 설명");
+        builder.setContentTitle("알람 제목");
+        builder.setContentText("알람 내용");
+        builder.setWhen(System.currentTimeMillis());
+//        builder.setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE);
+        builder.setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE);
+        builder.setContentIntent(pendingIntent);
+        builder.setAutoCancel(true);
+        builder.setNumber(999);
+        notificationManager.notify(0, builder.build());
 
-//    https://github.com/lipangit/JiaoZiVideoPlayer
+    }
+
+    //    https://github.com/lipangit/JiaoZiVideoPlayer
     class MyUserActionStandard implements JZUserActionStandard {
 
         @Override
@@ -717,14 +784,15 @@ public class Fragment_Watch extends Fragment implements View.OnClickListener {
             switch (type) {
                 case JZUserAction.ON_CLICK_START_ICON:
                     Log.d("JZplayer play", "onEvent: start!");
+
                     Realm realm = Realm.getDefaultInstance();
                     realm.beginTransaction();
-                    final ContentsVO contentsVO = realm.where(ContentsVO.class)
-                            .equalTo("category",category)
-                            .equalTo("index",index)
+                    final ContentsVO realmContentsVO = realm.where(ContentsVO.class)
+                            .equalTo("category",contentsVO.getCategory())
+                            .equalTo("index",contentsVO.getCategory())
                             .findFirst();
-                    contentsVO.setHistory(1);
-                    contentsVO.setHistoryDate(System.currentTimeMillis());
+                    realmContentsVO.setHistory(1);
+                    realmContentsVO.setHistoryDate(System.currentTimeMillis());
                     realm.commitTransaction();
                     realm.close();
 

@@ -59,9 +59,9 @@ public class Fragment_MyVideos extends Fragment implements View.OnClickListener 
         history = (Button)view.findViewById(R.id.historyBtn);
         download = (Button)view.findViewById(R.id.downloadBtn);
 
-        if(flag == 0)
+        if(flag == RealmHelper.FAVORITE)
             line = (ImageView)view.findViewById(R.id.favoriteLine);
-        else if(flag == 1)
+        else if(flag == RealmHelper.HISTORY)
             line = (ImageView)view.findViewById(R.id.historyLine);
         else
             line = (ImageView)view.findViewById(R.id.downloadLine);
@@ -81,37 +81,8 @@ public class Fragment_MyVideos extends Fragment implements View.OnClickListener 
         return view;
     }
     private void initializationData() {
-
-        List<ContentsVO> dbList = null;
-
-        Realm realm = Realm.getDefaultInstance();
-        RealmResults<ContentsVO> realmContentsVO = null;
-
-
-//        ㅁㄴㅇㄹㅁㄴㅇㄹㅁㄴㅇㄹㅁㄴㅇㄹㅁㄴㅇㄹ
-        switch (flag){
-            case 0:
-                realmContentsVO = realm.where(ContentsVO.class)
-                        .equalTo("favorite",1)
-                        .findAll();
-                dbList = realm.copyFromRealm(realmContentsVO);
-                break;
-            case 1:
-                realmContentsVO = realm.where(ContentsVO.class)
-                        .equalTo("history",1)
-                        .findAll();
-                dbList = realm.copyFromRealm(realmContentsVO);
-//                List<Person> beerDrinkers = select(persons, having(on(Person.class).getAge(),greaterThan(16)));
-
-                break;
-            default:
-//                dbList = dbHandler.readDownloadList();
-        }
-// ㅁㄴㅇㅁㄴㅇㄹㅁㄴㅇㄹㅁㄴㅇㄹㅁㄴㅇㄹㅁㄴㅇㄹㅁㄴㅇㄹ
-
-       this.list = dbList;
-
-        realm.close();
+        RealmHelper realmHelper = new RealmHelper();
+        this.list = realmHelper.getMyVideos(flag);
     }
     private void initializationListView() {
 

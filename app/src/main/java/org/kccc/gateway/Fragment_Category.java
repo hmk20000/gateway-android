@@ -36,6 +36,7 @@ public class Fragment_Category extends Fragment implements View.OnClickListener{
     private List<ContentsVO> list;
     private int category;
 
+    public Fragment_Category(){}
     public Fragment_Category(int category){
         this.category = category;
     }

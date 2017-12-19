@@ -4,12 +4,13 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.util.Log;
 
 import com.google.gson.Gson;
 
-import java.io.FileReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
@@ -58,12 +59,51 @@ public class LoadingActivity extends Activity {
             backgroundThreadProcessing();
         }
     };
+    public String moveFile(String folderName, String fileName, String beforeFilePath, String afterFilePath) {
 
+        String path = afterFilePath+"/"+folderName;
+        String filePath = path+"/"+fileName;
+
+        File dir = new File(path);
+
+        if (!dir.exists()) { //폴더 없으면 폴더 생성
+            dir.mkdirs();
+        }
+
+        try{
+
+            File file =new File(beforeFilePath);
+
+            if(file.renameTo(new File(filePath))){ //파일 이동
+                return filePath; //성공시 성공 파일 경로 return
+            }else{
+                return null;
+            }
+
+        }catch(Exception e){
+            e.printStackTrace();
+            return null;
+        }
+
+    }
     // 백그라운드에서 몇 가지 처리를 수행하는 메서드.
     private void backgroundThreadProcessing()
     {
 
         Log.d("Thread Start", "Thread Start~!");
+
+
+
+        String fileName = "되돌리기";
+        String file_path = Environment.getExternalStorageDirectory() + "/gateway/"+fileName+".mp4";
+        File files = new File(file_path);
+
+        if(files.exists()){
+            Log.d("File Test", "backgroundThreadProcessing: "+files.exists());
+//            moveFile()
+        }
+
+
 
         Realm.init(this);
         RealmConfiguration config = new RealmConfiguration.Builder().build();
@@ -74,7 +114,7 @@ public class LoadingActivity extends Activity {
         RealmResults<ContentsVO> OldRealm = realm.where(ContentsVO.class).findAll();
         List<ContentsVO> OldData = realm.copyFromRealm(OldRealm);
 
-        realmHelper helper = new realmHelper();
+        RealmHelper helper = new RealmHelper();
         helper.clearContentsHelper(realm);
 
         try
@@ -125,6 +165,7 @@ public class LoadingActivity extends Activity {
         }
     }
 
+    //OldContentsVO의 다운로드, 히스토리, 즐겨찾기를 복구
     private void datebaseManagement(List<ContentsVO> OldContentsVO){
         Realm.init(this);
         RealmConfiguration config = new RealmConfiguration.Builder().build();
@@ -133,7 +174,6 @@ public class LoadingActivity extends Activity {
         RealmResults<ContentsVO> currentDB = realm.where(ContentsVO.class).findAll();
 
         realm.beginTransaction();
-
 
         for(int i=0; i<OldContentsVO.size() && i<currentDB.size(); i++){
             ContentsVO tmp = OldContentsVO.get(i);

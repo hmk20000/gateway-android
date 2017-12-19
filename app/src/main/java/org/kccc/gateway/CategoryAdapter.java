@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import java.util.List;
 
@@ -36,6 +37,9 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryHolder>  {
                 mainActivity.fragmentReplaceWithCategory(position);
             }
         });
+
+        holder.Thumbnail.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        holder.Thumbnail.getLayoutParams().height = 270;
 
         //애니매이션 효과 추가
         new MyItemAnimator().setFadeAnimation(holder.Title);

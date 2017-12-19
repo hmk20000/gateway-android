@@ -6,7 +6,7 @@ import io.realm.RealmObject;
  * Created by ming on 2017. 12. 1..
  */
 
-public class DownloadVO extends RealmObject {
+public class DownloadVO {
     private int category;
     private int index;
     private String donwload_path;

@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:id="@+id/BaseLayout"
-    android:background="#1B1B1B">
+    android:background="@color/background">
+    <!--android:background="#1B1B1B">-->
     <RelativeLayout
         android:background="#1B1B1B"
         android:id="@+id/actionbar"
@@ -22,7 +24,7 @@
             android:id="@+id/backBtn"
             android:layout_height="wrap_content"
             android:layout_width="40dp"
-            android:src="@drawable/back"/>
+            android:src="@drawable/arrow_left"/>
         <TextView
             android:id="@+id/titleBar"
             android:layout_height="match_parent"
@@ -44,16 +46,16 @@
         android:layout_height="match_parent"
         android:layout_weight="1" >
 
-        <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/fullScreen"
-            android:src="@drawable/expand"
-            android:background="#00000000"
-            android:layout_margin="10dp"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
-        />
+        <!--<ImageButton-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:id="@+id/fullScreen"-->
+            <!--android:src="@drawable/expand"-->
+            <!--android:background="#00000000"-->
+            <!--android:layout_margin="10dp"-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--android:layout_alignParentTop="true"-->
+        <!--/>-->
 
         <cn.jzvd.JZVideoPlayerStandard
             android:id="@+id/videoplayer"
@@ -66,6 +68,20 @@
         android:layout_below="@+id/videoView"
         android:id="@+id/relativeLayout">
 
+        <!--<com.mikhaellopez.circularprogressbar.CircularProgressBar-->
+            <!--android:id="@+id/yourCircularProgressbar"-->
+            <!--android:layout_width="30dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_alignParentLeft="true"-->
+            <!--android:layout_alignParentStart="true"-->
+            <!--android:layout_centerVertical="true"-->
+            <!--android:layout_marginLeft="12dp"-->
+            <!--android:layout_marginStart="12dp"-->
+            <!--android:padding="10dp"-->
+            <!--app:cpb_background_progressbar_color="#4b4b4b"-->
+            <!--app:cpb_background_progressbar_width="5dp"-->
+            <!--app:cpb_progressbar_color="#000000"-->
+            <!--app:cpb_progressbar_width="5dp" />-->
         <ImageButton
             android:id="@+id/favoriteBtn"
             android:layout_width="24dp"
@@ -92,6 +108,20 @@
             android:scaleType="fitCenter"
             android:src="@drawable/save" />
 
+        <com.mikhaellopez.circularprogressbar.CircularProgressBar
+            android:id="@+id/yourCircularProgressbar"
+            android:layout_width="30dp"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/favoriteBtn"
+            android:layout_gravity="left"
+            android:layout_marginRight="7dp"
+            android:layout_toLeftOf="@+id/shareBtn"
+            android:layout_toStartOf="@+id/shareBtn"
+            app:cpb_background_progressbar_color="#4b4b4b"
+            app:cpb_background_progressbar_width="5dp"
+            app:cpb_progressbar_color="#000000"
+            app:cpb_progressbar_width="5dp" />
+
         <ImageButton
             android:id="@+id/shareBtn"
             android:layout_width="24dp"
@@ -105,12 +135,12 @@
             android:background="#1B1B1B"
             android:scaleType="fitCenter"
             android:src="@drawable/share" />
-        <ProgressBar
-            android:id="@+id/downloadProgress"
-            style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="match_parent"
-            android:layout_height="20dp"
-            android:layout_below="@id/shareBtn" />
+        <!--<ProgressBar-->
+            <!--android:id="@+id/downloadProgress"-->
+            <!--style="?android:attr/progressBarStyleHorizontal"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="20dp"-->
+            <!--android:layout_below="@id/shareBtn" />-->
 
         <!--<ImageView
             android:layout_width="match_parent"
@@ -137,8 +167,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="되돌리기"
-            android:id="@+id/title"
+            android:text="되돌리기3"
+            android:id="@+id/Main_title"
             android:textColor="#6BA1CB"
             android:textStyle="bold"
             android:textSize="20dp"
@@ -154,9 +184,9 @@
             android:text="(Ctrl+Z)"
             android:id="@+id/subTitle"
             android:textColor="#6BA1CB"
-            android:layout_alignBottom="@+id/title"
-            android:layout_toRightOf="@+id/title"
-            android:layout_toEndOf="@+id/title" />
+            android:layout_alignBottom="@+id/Main_title"
+            android:layout_toRightOf="@+id/Main_title"
+            android:layout_toEndOf="@+id/Main_title" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -165,7 +195,7 @@
             android:id="@+id/keyWord"
             android:textColor="#96CBD3"
             android:layout_marginLeft="10dp"
-            android:layout_below="@+id/title"
+            android:layout_below="@+id/Main_title"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true" />
         <TextView
