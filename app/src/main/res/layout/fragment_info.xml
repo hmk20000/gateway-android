@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#1B1B1B">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:id="@+id/actionbar"
+        android:background="#1B1B1B"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxHeight="80dp"
+            android:id="@+id/title"
+            android:background="#1B1B1B"
+            android:text="INFORMATION"
+            android:textColor="#FFFFFF"
+            android:textAlignment="center"
+            android:gravity="center_vertical"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/infoView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="35dp"
+        android:paddingRight="35dp"
+        android:paddingTop="30dp"
+        android:text="info"
+        android:autoLink="email"
+        android:textColor="#FFFFFF"
+        android:background="#1B1B1B"
+        android:layout_below="@+id/actionbar"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+    </TextView>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation = "horizontal"
+        android:id = "@+id/shareBtn"
+        android:layout_marginLeft="35dp"
+        android:layout_marginTop="15dp"
+        android:layout_below="@+id/infoView"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+        <ImageButton
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:background="@drawable/mail"
+            android:id = "@+id/mailBtn"
+            android:layout_marginRight="5dp"/>
+
+        <ImageButton
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:background="@drawable/kakaotalk"
+            android:id = "@+id/kakaotalkBtn"
+            android:layout_marginRight="5dp"/>
+
+        <ImageButton
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:background="@drawable/facebook"
+            android:id = "@+id/facebookBtn"
+            android:layout_marginRight="5dp"/>
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text = "sponsered by Jesus Film.CCC"
+        android:textColor = "#626262"
+        android:gravity="center_horizontal"
+        android:id = "@+id/spon"
+        android:layout_marginBottom="40dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <ImageView
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:src="@drawable/ccc_logo"
+        android:layout_above="@+id/spon"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="5dp" />
+
+</RelativeLayout>
