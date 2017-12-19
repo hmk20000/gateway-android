@@ -39,7 +39,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryHolder>  {
         });
 
         holder.Thumbnail.setScaleType(ImageView.ScaleType.FIT_CENTER);
-        holder.Thumbnail.getLayoutParams().height = 270;
+//        holder.Thumbnail.getLayoutParams().height = 270;
 
         //애니매이션 효과 추가
         new MyItemAnimator().setFadeAnimation(holder.Title);

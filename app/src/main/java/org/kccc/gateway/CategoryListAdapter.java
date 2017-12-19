@@ -61,7 +61,7 @@ public class CategoryListAdapter extends RecyclerView.Adapter<CategoryListHolder
         holder.subTitle.setText(itemList.get(position).getSubTitle());
 
         holder.Thumbnail.setScaleType(ImageView.ScaleType.FIT_CENTER);
-        holder.Thumbnail.getLayoutParams().height = 270;
+//        holder.Thumbnail.getLayoutParams().height = 270;
 
         orientationPref = context.getSharedPreferences("orientationPref", context.MODE_PRIVATE);
         orientationEditor = orientationPref.edit();
