@@ -6,6 +6,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,6 +55,50 @@ public class Fragment_MyVideos extends Fragment implements View.OnClickListener 
         view = inflater.inflate(R.layout.fragment_myvideos, container, false);
 
         categoryListView = (RecyclerView)view.findViewById(R.id.fragment_myvideo_list);
+
+        // swipe delete Test
+
+        ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                final int position = viewHolder.getAdapterPosition();
+
+                ContentsVO deleteContents = list.get(position);
+                Realm realm = Realm.getDefaultInstance();
+                deleteContents = realm.where(ContentsVO.class)
+                        .equalTo("category",deleteContents.getCategory())
+                        .equalTo("index",deleteContents.getIndex())
+                        .findFirst();
+                realm.beginTransaction();
+
+                switch (flag){
+                    case 0: deleteContents.setFavorite(0); break;
+                    case 1: deleteContents.setHistory(0); break;
+                    case 2: deleteContents.setDownload(0); break;
+                }
+
+
+
+                realm.commitTransaction();
+                realm.close();
+
+                list.remove(position);
+
+                categoryListView.getAdapter().notifyItemRemoved(position);
+                categoryListView.getAdapter().notifyDataSetChanged();
+            }
+        };
+
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(itemTouchHelperCallback);
+        itemTouchHelper.attachToRecyclerView(categoryListView);
+
+        //
+
         edit = (Button)view.findViewById(R.id.editBtn);
         favorite = (Button)view.findViewById(R.id.favoriteBtn);
         history = (Button)view.findViewById(R.id.historyBtn);

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -68,20 +69,6 @@
         android:layout_below="@+id/videoView"
         android:id="@+id/relativeLayout">
 
-        <!--<com.mikhaellopez.circularprogressbar.CircularProgressBar-->
-            <!--android:id="@+id/yourCircularProgressbar"-->
-            <!--android:layout_width="30dp"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_alignParentLeft="true"-->
-            <!--android:layout_alignParentStart="true"-->
-            <!--android:layout_centerVertical="true"-->
-            <!--android:layout_marginLeft="12dp"-->
-            <!--android:layout_marginStart="12dp"-->
-            <!--android:padding="10dp"-->
-            <!--app:cpb_background_progressbar_color="#4b4b4b"-->
-            <!--app:cpb_background_progressbar_width="5dp"-->
-            <!--app:cpb_progressbar_color="#000000"-->
-            <!--app:cpb_progressbar_width="5dp" />-->
         <ImageButton
             android:id="@+id/favoriteBtn"
             android:layout_width="24dp"
@@ -93,7 +80,7 @@
             android:layout_toStartOf="@+id/downloadBtn"
             android:background="#1B1B1B"
             android:scaleType="fitCenter"
-            android:src="@drawable/heart" />
+            android:src="@drawable/star" />
 
         <ImageButton
             android:id="@+id/downloadBtn"
@@ -154,93 +141,112 @@
     </RelativeLayout>
 
     <RelativeLayout
+        android:id="@+id/relativeLayout2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
 
+        android:layout_above="@+id/linearLayout"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:id="@+id/relativeLayout2"
         android:layout_below="@+id/relativeLayout"
-        android:layout_above="@+id/linearLayout">
+        android:layout_weight="1">
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="되돌리기3"
             android:id="@+id/Main_title"
-            android:textColor="#6BA1CB"
-            android:textStyle="bold"
-            android:textSize="20dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginLeft="10dp"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
-
-        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="(Ctrl+Z)"
-            android:id="@+id/subTitle"
-            android:textColor="#6BA1CB"
-            android:layout_alignBottom="@+id/Main_title"
-            android:layout_toRightOf="@+id/Main_title"
-            android:layout_toEndOf="@+id/Main_title" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="key word"
-            android:id="@+id/keyWord"
-            android:textColor="#96CBD3"
-            android:layout_marginLeft="10dp"
-            android:layout_below="@+id/Main_title"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="time"
-            android:id="@+id/time"
-            android:textColor="#96CBD3"
-            android:layout_marginLeft="10dp"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_below="@+id/keyWord" />
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="5dp"
+            android:text="되돌리기3"
+            android:textColor="#ffffff"
+            android:textSize="20dp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/subTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/Main_title"
+            android:layout_toEndOf="@+id/Main_title"
+            android:layout_toRightOf="@+id/Main_title"
+            android:text="(Ctrl+Z)"
+            android:textColor="#ffffff"
+            android:textSize="20dp" />
+
+        <TextView
+            android:id="@+id/time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/Main_title"
+            android:layout_marginLeft="10dp"
+            android:paddingBottom="3dp"
+            android:paddingTop="3dp"
+            android:text="key word"
+            android:textSize="10dp"
+            android:textColor="#878787" />
+
+        <View
+            android:id="@+id/centerLine"
+            android:layout_width="match_parent"
+            android:layout_height="0.1dp"
+            android:background="#878787"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_below="@+id/time"/>
+        <TextView
+            android:id="@+id/keyWord"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/centerLine"
+            android:layout_marginLeft="10dp"
+            android:text="time"
+            android:textSize="10dp"
+            android:textColor="#96CBD3" />
+
         <ScrollView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:paddingTop="5dp"
-            android:layout_below="@+id/time"
-            android:layout_alignLeft="@+id/time"
-            android:layout_alignStart="@+id/time"
+            android:layout_alignLeft="@+id/keyWord"
+            android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true">
+            android:layout_alignStart="@+id/keyWord"
+            android:layout_below="@+id/keyWord"
+            android:paddingTop="5dp"
+            android:paddingRight="15dp"
+            android:paddingLeft="15dp">
 
             <TextView
+                android:id="@+id/description"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/description"
-                android:text="Description Description Description Description Description Description Description Description"
-                android:textColor="#FFFFFF"
-                android:paddingRight="5dp"
-                android:layout_below="@+id/time"
-                android:layout_alignParentRight="true"
+                android:layout_alignLeft="@+id/keyWord"
                 android:layout_alignParentEnd="true"
-                android:layout_alignLeft="@+id/time"
-                android:layout_alignStart="@+id/time" />
+                android:layout_alignParentRight="true"
+                android:layout_alignStart="@+id/keyWord"
+                android:layout_below="@+id/keyWord"
+                android:paddingRight="5dp"
+                android:text="Description Description Description Description Description Description Description Description"
+                android:textSize="13dp"
+                android:textColor="#878787" />
         </ScrollView>
 
         <!--<VideoView-->
-            <!--android:id="@+id/videoView"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent"-->
+        <!--android:id="@+id/videoView"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
 
-            <!--android:layout_alignParentStart="true"-->
-            <!--android:layout_alignParentTop="true"-->
-            <!--android:layout_gravity="center"-->
-            <!--android:scaleType="fitCenter" />-->
+        <!--android:layout_alignParentStart="true"-->
+        <!--android:layout_alignParentTop="true"-->
+        <!--android:layout_gravity="center"-->
+        <!--android:scaleType="fitCenter" />-->
     </RelativeLayout>
 
     <LinearLayout

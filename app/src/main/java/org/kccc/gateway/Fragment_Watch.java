@@ -16,6 +16,7 @@ import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Typeface;
 import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -207,7 +208,7 @@ public class Fragment_Watch extends Fragment implements View.OnClickListener {
                 next.setOnClickListener(this);
                 break;
             case 1:case 2:
-                view = inflater.inflate(R.layout.fragment_watch_2, container, false);
+                view = inflater.inflate(R.layout.fragment_watch_1, container, false);
 //            contentsVO = DataBaseHandler.getInstance(view.getContext()).read(category, index);
                 question = (Button)view.findViewById(R.id.questionBtn);
                 next = (Button)view.findViewById(R.id.nextBtn);
@@ -215,7 +216,7 @@ public class Fragment_Watch extends Fragment implements View.OnClickListener {
                 next.setOnClickListener(this);
                 break;
             case 3:case 4:
-                view = inflater.inflate(R.layout.fragment_watch_3, container, false);
+                view = inflater.inflate(R.layout.fragment_watch_1, container, false);
 //            contentsVO = DataBaseHandler.getInstance(view.getContext()).read(category, index);
                 break;
         }
@@ -228,7 +229,8 @@ public class Fragment_Watch extends Fragment implements View.OnClickListener {
 
 //        videoPref = view.getContext().getSharedPreferences("videoPos", view.getContext().MODE_PRIVATE);
 //        downloadPref = PreferenceManager.getDefaultSharedPreferences(view.getContext());
-
+        Typeface typeface = Typeface.createFromAsset(getActivity().getAssets(),"fonts/nanumgothic.ttf");
+        Typeface typefaceBold = Typeface.createFromAsset(getActivity().getAssets(),"fonts/nanumgothicbold.ttf");
         titleBar = (TextView) view.findViewById(R.id.titleBar);
         title = (TextView) view.findViewById(R.id.Main_title);
         subTitle = (TextView) view.findViewById(R.id.subTitle);
@@ -262,6 +264,12 @@ public class Fragment_Watch extends Fragment implements View.OnClickListener {
 //                videoView.start();
         }*/
         setContents(contentsVO);
+
+        titleBar.setTypeface(typefaceBold);
+        title.setTypeface(typefaceBold);
+        subTitle.setTypeface(typefaceBold);
+        time.setTypeface(typeface);
+
 
         videoContainer.setOnClickListener(this);
 //        fullScreen.setOnClickListener(this);
@@ -364,9 +372,9 @@ public class Fragment_Watch extends Fragment implements View.OnClickListener {
             description.setVisibility(View.GONE);
 
         if(contentsVO.getFavorite() == 0)
-            favorite.setImageDrawable(getResources().getDrawable(R.drawable.heart));
+            favorite.setImageDrawable(getResources().getDrawable(R.drawable.star));
         else
-            favorite.setImageDrawable(getResources().getDrawable(R.drawable.heart_click));
+            favorite.setImageDrawable(getResources().getDrawable(R.drawable.star_click));
 
 //        mediaController = new MediaController(videoView.getContext());
 //        mediaController.hide();
@@ -444,6 +452,8 @@ public class Fragment_Watch extends Fragment implements View.OnClickListener {
                 .equalTo("index",this.contentsVO.getIndex())
                 .findFirst();
 
+        RealmHelper realmHelper = new RealmHelper();
+
         Intent intent;
 //        videoEditor = videoPref.edit();
 //        downloadEditor = downloadPref.edit();
@@ -484,19 +494,19 @@ public class Fragment_Watch extends Fragment implements View.OnClickListener {
                     contentsVO.setFavorite(1);
                     contentsVO.setFavoriteDate(System.currentTimeMillis());
 
-                    favorite.setImageDrawable(getResources().getDrawable(R.drawable.heart_click));
+                    favorite.setImageDrawable(getResources().getDrawable(R.drawable.star_click));
                 }
                 else {
 
                     contentsVO.setFavorite(0);
                     contentsVO.setFavoriteDate(0);
 
-                    favorite.setImageDrawable(getResources().getDrawable(R.drawable.heart));
+                    favorite.setImageDrawable(getResources().getDrawable(R.drawable.star));
                 }
 
 //                realm.commitTransaction();
 
-                RealmHelper realmHelper = new RealmHelper();
+
                 realmHelper.saveContents(contentsVO);
 
                 break;
@@ -512,13 +522,11 @@ public class Fragment_Watch extends Fragment implements View.OnClickListener {
 //                        .callback(listener)
                         .start();
 
-                realm.beginTransaction();
-
                 DownloadStart(MOVIE_URL);
                 contentsVO.setDownload(1);
                 contentsVO.setDownloadDate(System.currentTimeMillis());
 
-                realm.commitTransaction();
+                realmHelper.saveContents(contentsVO);
 
                 /*if(wifi.isConnected()) {
                     if (contentsVO.getDownload() == 0) {

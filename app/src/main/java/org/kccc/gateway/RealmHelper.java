@@ -41,6 +41,7 @@ public class RealmHelper {
         RealmContentsVO.setFavorite(contentsVO.getFavorite());
 
         realm.commitTransaction();
+        realm.close();
     }
 
     public void saveContentsList(Realm realm, ContentsVO[] contentsVOS){

@@ -67,6 +67,10 @@ public class Fragment_MyVideos_Edit extends Fragment implements View.OnClickList
 
         switch (flag){
             case 0:
+                realmContentsVO = realm.where(ContentsVO.class)
+                        .equalTo("favorite",1)
+                        .findAll();
+                dbList = realm.copyFromRealm(realmContentsVO);
 //                dbList = dbHandler.readFavoriteList();
                 break;
             case 1:
@@ -76,6 +80,10 @@ public class Fragment_MyVideos_Edit extends Fragment implements View.OnClickList
                 dbList = realm.copyFromRealm(realmContentsVO);
                 break;
             default:
+                realmContentsVO = realm.where(ContentsVO.class)
+                        .equalTo("download",1)
+                        .findAll();
+                dbList = realm.copyFromRealm(realmContentsVO);
 //                dbList = dbHandler.readDownloadList();
         }
 

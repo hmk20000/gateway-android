@@ -70,7 +70,7 @@
             android:layout_width="40dp"
             android:layout_height="wrap_content"
             android:background="#1B1B1B"
-            android:src="@drawable/heart"
+            android:src="@drawable/star"
             android:id="@+id/favoriteBtn"
             android:layout_marginRight="10dp"
             android:layout_gravity = "left"

@@ -168,8 +168,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tabIconSelect(1);
     }
     public void fragmentReplaceWithInfo() {
-//        Fragment newFragment = new Fragment_Info();
-        Fragment newFragment = new Fragment_Setting();
+        Fragment newFragment = new Fragment_Info();
+//        Fragment newFragment = new Fragment_Setting();
         CurState = "Info";
 
         final FragmentTransaction transaction = getFragmentManager().beginTransaction();
