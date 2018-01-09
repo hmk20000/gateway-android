@@ -25,7 +25,7 @@ import io.realm.RealmResults;
 @SuppressLint("ValidFragment")
 public class Fragment_MyVideos extends Fragment implements View.OnClickListener {
     private View view;
-    private Button edit;
+//    private Button edit;
     private Button favorite;
     private Button history;
     private Button download;
@@ -99,7 +99,7 @@ public class Fragment_MyVideos extends Fragment implements View.OnClickListener 
 
         //
 
-        edit = (Button)view.findViewById(R.id.editBtn);
+//        edit = (Button)view.findViewById(R.id.editBtn);
         favorite = (Button)view.findViewById(R.id.favoriteBtn);
         history = (Button)view.findViewById(R.id.historyBtn);
         download = (Button)view.findViewById(R.id.downloadBtn);
@@ -115,7 +115,7 @@ public class Fragment_MyVideos extends Fragment implements View.OnClickListener 
             line.setBackground(view.getResources().getDrawable(R.drawable.underlinetrue));
         }
 
-        edit.setOnClickListener(this);
+//        edit.setOnClickListener(this);
         favorite.setOnClickListener(this);
         history.setOnClickListener(this);
         download.setOnClickListener(this);
@@ -141,9 +141,9 @@ public class Fragment_MyVideos extends Fragment implements View.OnClickListener 
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.editBtn:
-                ((MainActivity) view.getContext()).fragmentReplaceWithMyVideoEdit(flag);
-                break;
+//            case R.id.editBtn:
+//                ((MainActivity) view.getContext()).fragmentReplaceWithMyVideoEdit(flag);
+//                break;
             case R.id.favoriteBtn:
                 ((MainActivity) view.getContext()).fragmentReplaceWithMyVideo(0);
                 if(flag!=0)
