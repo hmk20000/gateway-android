@@ -42,6 +42,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private ContentsVO contentsVO;
 
+    public static int myVideoFlag = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -251,7 +253,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 fragmentReplaceWithHome();
                 break;
             case "MyVideo":
-                fragmentReplaceWithHome();
+                fragmentReplaceWithMyVideo(myVideoFlag);
 //        else if(CurState.equals("MyVideoEdit"))
 //            fragmentReplaceWithMyVideo(Flag);
                 break;
