@@ -92,8 +92,6 @@ public class LoadingActivity extends Activity {
 
         Log.d("Thread Start", "Thread Start~!");
 
-
-
         String fileName = "되돌리기";
         String file_path = Environment.getExternalStorageDirectory() + "/gateway/"+fileName+".mp4";
         File files = new File(file_path);
@@ -102,8 +100,6 @@ public class LoadingActivity extends Activity {
             Log.d("File Test", "backgroundThreadProcessing: "+files.exists());
 //            moveFile()
         }
-
-
 
         Realm.init(this);
         RealmConfiguration config = new RealmConfiguration.Builder().build();
@@ -114,11 +110,11 @@ public class LoadingActivity extends Activity {
         RealmResults<ContentsVO> OldRealm = realm.where(ContentsVO.class).findAll();
         List<ContentsVO> OldData = realm.copyFromRealm(OldRealm);
 
-        RealmHelper helper = new RealmHelper();
-        helper.clearContentsHelper(realm);
-
         try
         {
+            RealmHelper helper = new RealmHelper();
+            helper.clearContentsHelper(realm);
+
             String ServerJSON = getServerJSON();
 
             //json 파싱

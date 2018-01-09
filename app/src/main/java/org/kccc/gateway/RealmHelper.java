@@ -24,6 +24,28 @@ public class RealmHelper {
     static int DOWNLOAD = 2;
     private String[] fieldName = {"favorite","history","download"};
 
+    public boolean FirstTimeCheck(){
+        boolean rtn = true;
+
+        Realm realm = Realm.getDefaultInstance();
+        realm.beginTransaction();
+
+        AppInfoVO appInfoVO = realm.where(AppInfoVO.class).findFirst();
+
+        if(appInfoVO == null){
+            AppInfoVO appInfoVO1 = realm.createObject(AppInfoVO.class);
+            appInfoVO1.setFirstTimeUse(1);
+
+            rtn = true;
+        }else {
+            rtn = false;
+        }
+        realm.commitTransaction();
+        realm.close();
+
+        return rtn;
+    }
+
     public void saveContents(ContentsVO contentsVO){
         Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();

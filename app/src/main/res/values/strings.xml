@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">gateway</string>
+
+    <string name="tips_not_wifi">모바일 네트워크를 사용해서 재생하시겠습니까?</string>
+
+    <string name="tips_not_wifi_confirm">재생</string>
+    <string name="tips_not_wifi_cancel">취소</string>
+
 </resources>

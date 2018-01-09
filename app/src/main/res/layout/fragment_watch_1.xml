@@ -158,7 +158,7 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="20dp"
             android:layout_marginTop="5dp"
             android:text="되돌리기3"
             android:textColor="#ffffff"
@@ -183,10 +183,10 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_below="@+id/Main_title"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="20dp"
             android:paddingBottom="3dp"
-            android:paddingTop="3dp"
-            android:text="key word"
+            android:paddingTop="10dp"
+            android:text="key time"
             android:textSize="10dp"
             android:textColor="#878787" />
 
@@ -206,8 +206,9 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_below="@+id/centerLine"
-            android:layout_marginLeft="10dp"
-            android:text="time"
+            android:paddingTop="10dp"
+            android:layout_marginLeft="30dp"
+            android:text="keyWord"
             android:textSize="10dp"
             android:textColor="#96CBD3" />
 
@@ -219,9 +220,9 @@
             android:layout_alignParentRight="true"
             android:layout_alignStart="@+id/keyWord"
             android:layout_below="@+id/keyWord"
-            android:paddingTop="5dp"
-            android:paddingRight="15dp"
-            android:paddingLeft="15dp">
+            android:paddingTop="10dp"
+            android:paddingRight="30dp"
+            android:paddingLeft="0dp">
 
             <TextView
                 android:id="@+id/description"

@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
@@ -48,12 +49,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         FirebaseMessaging.getInstance().subscribeToTopic("notice");
 
-//        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
-        // 화면을 portrait(세로) 화면으로 고정하고 싶은 경우
-//        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        // 화면을 landscape(가로) 화면으로 고정하고 싶은 경우
+        RealmHelper realmHelper = new RealmHelper();
+        if(realmHelper.FirstTimeCheck()){
+            SharedPreferences orientationPref = getSharedPreferences("orientationPref",MODE_PRIVATE);
+            SharedPreferences.Editor orientationEditor = orientationPref.edit();
+            orientationEditor.putInt("flag",-1);
+            orientationEditor.commit();
 
-//        setContentView(R.layout.activity_main);
+            Intent intent = new Intent(this, ImageSlideActivity.class);
+            startActivity(intent);
+        }
 
         context = this;
         TabBtn = new ArrayList<Button>();
@@ -82,6 +87,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
+        JZVideoPlayerStandard.goOnPlayOnPause();
         switch (v.getId()){
             case R.id.Home:
                 fragmentReplaceWithHome(); //fragmentReplaceWithHome();

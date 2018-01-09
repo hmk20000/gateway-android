@@ -29,10 +29,10 @@ public class ImageSlideActivity extends AppCompatActivity {
         else
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT); // 세로전환
 
-//        mImagePagerAdapter = new ImagePagerAdapter(this, flag);
+        mImagePagerAdapter = new ImagePagerAdapter(this, flag);
 
-//        mViewPager = (ViewPager) findViewById(R.id.pager);
-//        mViewPager.setAdapter(mImagePagerAdapter);
+        mViewPager = (ViewPager) findViewById(R.id.pager);
+        mViewPager.setAdapter(mImagePagerAdapter);
     }
 
 
