@@ -19,7 +19,7 @@ public class ContentsVO extends RealmObject{
     private int history;
     private long historyDate;
     private String URL;
-    private String keyWord;
+    private String keyword;
     private String description;
     private RealmList<QuestionVO> question1;
     private RealmList<QuestionVO> question2;
@@ -29,7 +29,7 @@ public class ContentsVO extends RealmObject{
     public ContentsVO() {
     }
 
-    public ContentsVO(int category, int index, int order, String title, String subTitle, String url, String keyWord, String description, RealmList<QuestionVO> question1, RealmList<QuestionVO> question2, String time, RealmList<NextVO> next) {
+    public ContentsVO(int category, int index, int order, String title, String subTitle, String url, String keyword, String description, RealmList<QuestionVO> question1, RealmList<QuestionVO> question2, String time, RealmList<NextVO> next) {
         this.category = category;
         this.index = index;
         this.title = title;
@@ -42,7 +42,7 @@ public class ContentsVO extends RealmObject{
         this.history = 0;
         this.historyDate = 0;
         this.URL = url;
-        this.keyWord = keyWord;
+        this.keyword = keyword;
         this.description = description;
         this.question1 = question1;
         this.question2 = question2;
@@ -143,11 +143,11 @@ public class ContentsVO extends RealmObject{
     }
 
     public String getKeyWord() {
-        return keyWord;
+        return keyword;
     }
 
     public void setKeyWord(String keyWord) {
-        this.keyWord = keyWord;
+        this.keyword = keyWord;
     }
 
     public String getDescription() {

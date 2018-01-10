@@ -19,12 +19,14 @@
         <ImageButton
             android:background="#1B1B1B"
             android:id="@+id/backBtn"
-            android:layout_height="wrap_content"
-            android:layout_width="40dp"
+            android:layout_height="20dp"
+            android:layout_width="20dp"
+            android:layout_marginLeft="10dp"
+            android:scaleType="fitXY"
             android:src="@drawable/arrow_left"/>
         <TextView
             android:id="@+id/titleBar"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:layout_alignParentStart="true"
             android:layout_alignParentLeft="true"
@@ -32,7 +34,7 @@
             android:layout_alignBottom="@+id/backBtn"
             android:gravity="center_vertical"
             android:textAlignment="center"
-            android:textSize="20dp"
+            android:textSize="15sp"
             android:textColor="#FFFFFF"
             android:text="되돌리기"/>
     </RelativeLayout>

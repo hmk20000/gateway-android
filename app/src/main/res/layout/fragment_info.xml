@@ -27,7 +27,8 @@
             android:gravity="center_vertical"
             android:layout_alignParentTop="true"
             android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
+            android:layout_alignParentEnd="true"
+            android:textSize="15sp"/>
     </RelativeLayout>
 
     <TextView

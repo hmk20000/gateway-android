@@ -186,6 +186,9 @@ public class Fragment_Watch extends Fragment implements View.OnClickListener {
 
         super.onCreateView(inflater, container, savedInstanceState);
 
+        Typeface typeface = Typeface.createFromAsset(getActivity().getAssets(),"fonts/nanumgothic.ttf");
+        Typeface typefaceBold = Typeface.createFromAsset(getActivity().getAssets(),"fonts/nanumgothicbold.ttf");
+
         switch (contentsVO.getCategory()){
             case 0:
                 view = inflater.inflate(R.layout.fragment_watch_1, container, false);
@@ -196,9 +199,12 @@ public class Fragment_Watch extends Fragment implements View.OnClickListener {
                 next = (Button)view.findViewById(R.id.nextBtn);
                 question.setOnClickListener(this);
                 next.setOnClickListener(this);
+                time = (TextView)view.findViewById(R.id.time);
+                time.setText(contentsVO.getTime());
+                time.setTypeface(typeface);
                 break;
             case 1:case 2:
-                view = inflater.inflate(R.layout.fragment_watch_1, container, false);
+                view = inflater.inflate(R.layout.fragment_watch_2, container, false);
 //            contentsVO = DataBaseHandler.getInstance(view.getContext()).read(category, index);
                 question = (Button)view.findViewById(R.id.questionBtn);
                 next = (Button)view.findViewById(R.id.nextBtn);
@@ -206,7 +212,10 @@ public class Fragment_Watch extends Fragment implements View.OnClickListener {
                 next.setOnClickListener(this);
                 break;
             case 3:case 4:
-                view = inflater.inflate(R.layout.fragment_watch_1, container, false);
+                view = inflater.inflate(R.layout.fragment_watch_3, container, false);
+                time = (TextView)view.findViewById(R.id.time);
+                time.setText(contentsVO.getTime());
+                time.setTypeface(typeface);
 //            contentsVO = DataBaseHandler.getInstance(view.getContext()).read(category, index);
                 break;
         }
@@ -219,12 +228,11 @@ public class Fragment_Watch extends Fragment implements View.OnClickListener {
 
 //        videoPref = view.getContext().getSharedPreferences("videoPos", view.getContext().MODE_PRIVATE);
 //        downloadPref = PreferenceManager.getDefaultSharedPreferences(view.getContext());
-        Typeface typeface = Typeface.createFromAsset(getActivity().getAssets(),"fonts/nanumgothic.ttf");
-        Typeface typefaceBold = Typeface.createFromAsset(getActivity().getAssets(),"fonts/nanumgothicbold.ttf");
+
         titleBar = (TextView) view.findViewById(R.id.titleBar);
         title = (TextView) view.findViewById(R.id.Main_title);
         subTitle = (TextView) view.findViewById(R.id.subTitle);
-        time = (TextView)view.findViewById(R.id.time);
+
         description = (TextView) view.findViewById(R.id.description);
 
         videoContainer = (RelativeLayout)view.findViewById(R.id.videoContainer);
@@ -248,7 +256,8 @@ public class Fragment_Watch extends Fragment implements View.OnClickListener {
         titleBar.setTypeface(typefaceBold);
         title.setTypeface(typefaceBold);
         subTitle.setTypeface(typefaceBold);
-        time.setTypeface(typeface);
+        description.setTypeface(typeface);
+
 
 
         videoContainer.setOnClickListener(this);
@@ -338,16 +347,6 @@ public class Fragment_Watch extends Fragment implements View.OnClickListener {
             subTitle.setText("("+contentsVO.getSubTitle()+")");
         else
             subTitle.setVisibility(View.GONE);
-
-        if(contentsVO.getTime() != null)
-            time.setText(contentsVO.getTime());
-        else
-            time.setVisibility(View.GONE);
-
-//        if(contentsVO.getKeyWord() != null)
-//            keyWord.setText(contentsVO.getKeyWord());
-//        else
-//            keyWord.setVisibility(View.GONE);
 
         if(contentsVO.getDescription() != null) {
             description.setText(contentsVO.getDescription());

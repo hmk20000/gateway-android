@@ -70,36 +70,21 @@ public class CategoryListAdapter extends RecyclerView.Adapter<CategoryListHolder
             @Override
             public void onClick(View v) {
                 Log.d("click", "onClick: "+position);
-                if (itemList.get(position).getCategory() == 3 && itemList.get(position).getIndex() == 3) {
+                int tmpCategory = itemList.get(position).getCategory();
+                int tmpIndex = itemList.get(position).getIndex();
+                if (tmpCategory == 3 && tmpIndex == 3) {
                     orientationEditor.putInt("flag", 1);
                     orientationEditor.commit();
                     context.startActivity(new Intent(context, ImageSlideActivity.class));
                 }
-                else if (itemList.get(position).getCategory() == 4) {
-                    if (itemList.get(position).getIndex() == 1) {
-                        orientationEditor.putInt("flag", 0);
-                        orientationEditor.commit();
-                        Intent intent = new Intent(context, ImageSlideActivity.class);
-                        context.startActivity(intent);
-                    }
-                    else{
-
-                        SharedPreferences videoPref = view.getContext().getSharedPreferences("videoPos", view.getContext().MODE_PRIVATE);
-                        SharedPreferences.Editor videoEditor = videoPref.edit();
-                        videoEditor.putInt("category",itemList.get(position).getCategory());
-                        videoEditor.putInt("index",itemList.get(position).getIndex());
-                        videoEditor.putInt("curPos",0);
-                        videoEditor.putBoolean("curPlay",false);
-                        videoEditor.commit();
-
-//                        view.getContext().startActivity(new Intent(view.getContext(), VideoFullScreen.class));
-                    }
+                else if (tmpCategory == 4 && tmpIndex == 1) {
+                    orientationEditor.putInt("flag", 0);
+                    orientationEditor.commit();
+                    Intent intent = new Intent(context, ImageSlideActivity.class);
+                    context.startActivity(intent);
                 }
                 else {
-                    if(flag<4)
-                        ((MainActivity)context).fragmentReplaceWithWatch(itemList.get(position).getCategory(), itemList.get(position).getIndex(), false, flag);
-                    else
-                        ((MainActivity)context).fragmentReplaceWithWatch(itemList.get(position).getCategory(), itemList.get(position).getIndex(), true, flag);
+                    ((MainActivity)context).fragmentReplaceWithWatch(tmpCategory, tmpIndex, flag >= 4, flag);
                 }
             }
         });
