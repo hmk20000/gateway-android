@@ -198,14 +198,44 @@
             android:paddingTop="10dp"
             android:text="keyWord"
             android:textColor="#96CBD3"
-            android:textSize="10dp" />
+            android:textSize="10dp"
+            android:visibility="invisible"/>
+        <HorizontalScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/centerLine"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:scrollbars="none"
+            android:id="@+id/keyword_box">
+
+            <LinearLayout
+                android:id="@+id/keyword_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_below="@+id/centerLine"
+                android:paddingTop="10dp"
+                android:paddingBottom="0dp">
+                <TextView
+                    android:id="@+id/keyword_contents"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:padding="3dp"
+                    android:textColor="#96CBD3"
+                    android:background="@drawable/custom_keyword_background"
+                    android:text="KEYWORD"/>
+            </LinearLayout>
+
+        </HorizontalScrollView>
 
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:layout_below="@id/keyWord"
+            android:layout_below="@id/keyword_box"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
             android:paddingTop="5dp">
@@ -215,7 +245,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Description Description Description Description Description Description Description Description"
-                android:textSize="13dp"
+                android:textSize="13sp"
                 android:textColor="#878787" />
         </ScrollView>
     </RelativeLayout>

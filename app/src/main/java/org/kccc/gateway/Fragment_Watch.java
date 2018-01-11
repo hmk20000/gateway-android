@@ -1,31 +1,18 @@
 package org.kccc.gateway;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.Dialog;
 import android.app.Fragment;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
-import android.content.ContextWrapper;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
-import android.media.MediaPlayer;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.preference.PreferenceManager;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.method.ScrollingMovementMethod;
@@ -33,7 +20,6 @@ import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -41,8 +27,8 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.mikhaellopez.circularprogressbar.CircularProgressBar;
@@ -56,7 +42,6 @@ import java.util.List;
 import cn.jzvd.JZUserAction;
 import cn.jzvd.JZUserActionStandard;
 import cn.jzvd.JZVideoPlayer;
-import cn.jzvd.JZVideoPlayerManager;
 import cn.jzvd.JZVideoPlayerStandard;
 import io.github.lizhangqu.coreprogress.ProgressHelper;
 import io.github.lizhangqu.coreprogress.ProgressUIListener;
@@ -79,73 +64,32 @@ import okio.Okio;
 @SuppressLint("ValidFragment")
 public class Fragment_Watch extends Fragment implements View.OnClickListener {
     private View view;
-    private RelativeLayout videoContainer;
-//    private VideoView videoView;
-    private TextView titleBar;
-    private TextView title;
-    private TextView subTitle;
-    private TextView keyWord;
-    private TextView time;
-    private TextView description;
-//    private ImageButton fullScreen;
+
     private ImageButton back;
     private ImageButton favorite;
     private ImageButton download;
     private ImageButton share;
 
-    private Button question;
-    private Button next;
-
-//    private int category;
-//    private int index;
-    private int flag;
+    private int myVideoFlag;
 
     private String MOVIE_URL = "";
     private String MOVIE_INTERNAL_PATH;
-//    private String fileName = "";
-
-//    private SharedPreferences downloadPref;
-//    private SharedPreferences.Editor downloadEditor;
-//    private SharedPreferences videoPref;
-//    private SharedPreferences.Editor videoEditor;
-//    private int curPos;
-//    private boolean isPlaying;
-//    private boolean isError;
 
     private Dialog dialog;
     private RecyclerView nextView;
-    private NextListAdapter nextAdapter;
-    private RecyclerView.LayoutManager nextListLayoutManager;
-    private ImageButton button;
     private List<NextVO> nextList;
 
-    private TextView title1;
-    private TextView title2;
-    private TextView question1;
-    private TextView question2;
-    private Window window;
-    private WindowManager.LayoutParams params;
-    private WindowManager windowManager;
-    private Display display;
-
-    private  ProgressBar downloadProgress;
     private CircularProgressBar circularProgressBar;
 
     JZVideoPlayerStandard jzVideoPlayerStandard;
-
-    private ProgressBar pbDLs;
 
     private ContentsVO contentsVO;
 
     public Fragment_Watch(){}
 
-    public Fragment_Watch(ContentsVO contentsVO, int flag) {
+    public Fragment_Watch(ContentsVO contentsVO, int myVideoFlag) {
         this.contentsVO = contentsVO;
-//        this.category = contentsVO.getCategory();
-//        this.index = contentsVO.getIndex();
-//        this.MOVIE_URL = contentsVO.getURL();
-//        this.fileName = contentsVO.getTitle();
-        this.flag = flag;
+        this.myVideoFlag = myVideoFlag;
     }
 
     @Override
@@ -186,6 +130,18 @@ public class Fragment_Watch extends Fragment implements View.OnClickListener {
 
         super.onCreateView(inflater, container, savedInstanceState);
 
+
+        setContents(inflater,container);
+
+        back.setOnClickListener(this);
+        favorite.setOnClickListener(this);
+        download.setOnClickListener(this);
+        share.setOnClickListener(this);
+
+        return view;
+    }
+
+    private void setContents(LayoutInflater inflater, ViewGroup container){
         Typeface typeface = Typeface.createFromAsset(getActivity().getAssets(),"fonts/nanumgothic.ttf");
         Typeface typefaceBold = Typeface.createFromAsset(getActivity().getAssets(),"fonts/nanumgothicbold.ttf");
 
@@ -193,13 +149,28 @@ public class Fragment_Watch extends Fragment implements View.OnClickListener {
             case 0:
                 view = inflater.inflate(R.layout.fragment_watch_1, container, false);
 //            contentsVO = DataBaseHandler.getInstance(view.getContext()).read(category, index);
-                keyWord = (TextView) view.findViewById(R.id.keyWord);
-                keyWord.setText(contentsVO.getKeyWord());
-                question = (Button)view.findViewById(R.id.questionBtn);
-                next = (Button)view.findViewById(R.id.nextBtn);
+//                keyWord = (TextView) view.findViewById(R.id.keyWord);
+//                keyWord.setText(contentsVO.getKeyWord());
+                LinearLayout linearLayout = view.findViewById(R.id.keyword_list);
+
+                String[] array = contentsVO.getKeyWord().replace(" ","").split(",");
+                TextView keyWord = view.findViewById(R.id.keyword_contents);
+                for(String cha:array){
+                    TextView tmpTextView = new TextView(getActivity());
+                    tmpTextView.setText("#"+cha);
+                    tmpTextView.setLayoutParams(keyWord.getLayoutParams());
+                    tmpTextView.setBackground(keyWord.getBackground());
+                    tmpTextView.setTextColor(keyWord.getTextColors());
+
+                    linearLayout.addView(tmpTextView);
+                }
+                ((ViewGroup) keyWord.getParent()).removeView(keyWord);
+
+                Button question = (Button) view.findViewById(R.id.questionBtn);
+                Button next = (Button) view.findViewById(R.id.nextBtn);
                 question.setOnClickListener(this);
                 next.setOnClickListener(this);
-                time = (TextView)view.findViewById(R.id.time);
+                TextView time = (TextView) view.findViewById(R.id.time);
                 time.setText(contentsVO.getTime());
                 time.setTypeface(typeface);
                 break;
@@ -229,13 +200,12 @@ public class Fragment_Watch extends Fragment implements View.OnClickListener {
 //        videoPref = view.getContext().getSharedPreferences("videoPos", view.getContext().MODE_PRIVATE);
 //        downloadPref = PreferenceManager.getDefaultSharedPreferences(view.getContext());
 
-        titleBar = (TextView) view.findViewById(R.id.titleBar);
-        title = (TextView) view.findViewById(R.id.Main_title);
-        subTitle = (TextView) view.findViewById(R.id.subTitle);
+        TextView titleBar = (TextView) view.findViewById(R.id.titleBar);
+        TextView title = (TextView) view.findViewById(R.id.Main_title);
+        TextView subTitle = (TextView) view.findViewById(R.id.subTitle);
 
-        description = (TextView) view.findViewById(R.id.description);
+        TextView description = (TextView) view.findViewById(R.id.description);
 
-        videoContainer = (RelativeLayout)view.findViewById(R.id.videoContainer);
 //        fullScreen = (ImageButton)view.findViewById(R.id.fullScreen);
         back = (ImageButton)view.findViewById(R.id.backBtn);
         favorite = (ImageButton)view.findViewById(R.id.favoriteBtn);
@@ -251,31 +221,30 @@ public class Fragment_Watch extends Fragment implements View.OnClickListener {
         circularProgressBar.setVisibility(View.INVISIBLE);
 
         setVideoPath(contentsVO,view);
-        setContents(contentsVO);
+        titleBar.setText(contentsVO.getTitle());
+        title.setText(contentsVO.getTitle());
+//        title.setText("test");
+        if(contentsVO.getSubTitle()!=null)
+            subTitle.setText("("+contentsVO.getSubTitle()+")");
+        else
+            subTitle.setVisibility(View.GONE);
+
+        if(contentsVO.getDescription() != null) {
+            description.setText(contentsVO.getDescription());
+            description.setMovementMethod(new ScrollingMovementMethod());
+        }
+        else
+            description.setVisibility(View.GONE);
+
+        if(contentsVO.getFavorite() == 0)
+            favorite.setImageDrawable(getResources().getDrawable(R.drawable.star));
+        else
+            favorite.setImageDrawable(getResources().getDrawable(R.drawable.star_click));
 
         titleBar.setTypeface(typefaceBold);
         title.setTypeface(typefaceBold);
         subTitle.setTypeface(typefaceBold);
         description.setTypeface(typeface);
-
-
-
-        videoContainer.setOnClickListener(this);
-//        fullScreen.setOnClickListener(this);
-        back.setOnClickListener(this);
-//        videoView.setOnClickListener(this);
-        favorite.setOnClickListener(this);
-        download.setOnClickListener(this);
-        share.setOnClickListener(this);
-
-        /*if(contentsVO.getDownload() == 2) {
-            download.setVisibility(View.GONE);
-            fullScreen.setVisibility(View.GONE);
-        }*/
-
-//        realm.close();
-
-        return view;
     }
 
     public void setVideoPath(ContentsVO contentsVO, View view){
@@ -338,30 +307,6 @@ public class Fragment_Watch extends Fragment implements View.OnClickListener {
 //            videoView.setBackgroundDrawable(new ThumbnailHandler(view.getContext()).setThumbnail(category, index));
 
     }
-
-    public void setContents(ContentsVO contentsVO){
-        titleBar.setText(contentsVO.getTitle());
-        title.setText(contentsVO.getTitle());
-//        title.setText("test");
-        if(contentsVO.getSubTitle()!=null)
-            subTitle.setText("("+contentsVO.getSubTitle()+")");
-        else
-            subTitle.setVisibility(View.GONE);
-
-        if(contentsVO.getDescription() != null) {
-            description.setText(contentsVO.getDescription());
-            description.setMovementMethod(new ScrollingMovementMethod());
-        }
-        else
-            description.setVisibility(View.GONE);
-
-        if(contentsVO.getFavorite() == 0)
-            favorite.setImageDrawable(getResources().getDrawable(R.drawable.star));
-        else
-            favorite.setImageDrawable(getResources().getDrawable(R.drawable.star_click));
-    }
-
-
     private void initializationNextData() {
 //        List<NextVO> dbQuestionList = DataBaseHandler.getInstance(view.getContext()).readNextQuestionList(category, index);
         List<NextVO> dbQuestionList = contentsVO.getNext();
@@ -369,10 +314,10 @@ public class Fragment_Watch extends Fragment implements View.OnClickListener {
     }
     private void initializationNextListView(Dialog dialog) {
 
-        nextListLayoutManager = new LinearLayoutManager(view.getContext());
+        RecyclerView.LayoutManager nextListLayoutManager = new LinearLayoutManager(view.getContext());
         nextView.setLayoutManager(nextListLayoutManager);
         if(nextList.size() != 0){
-            nextAdapter = new NextListAdapter(view.getContext(), nextList, dialog);
+            NextListAdapter nextAdapter = new NextListAdapter(view.getContext(), nextList, dialog);
             nextView.setAdapter(nextAdapter);
         }
     }
@@ -406,8 +351,8 @@ public class Fragment_Watch extends Fragment implements View.OnClickListener {
 
                 //videoEditor.putBoolean("curPlay", false);
                 //videoEditor.commit();
-                if(flag<4)
-                    ((MainActivity)view.getContext()).fragmentReplaceWithMyVideo(flag);
+                if(myVideoFlag<4)
+                    ((MainActivity)view.getContext()).fragmentReplaceWithMyVideo(myVideoFlag);
                 else
                     ((MainActivity)view.getContext()).fragmentReplaceWithCategory(contentsVO.getCategory());
                 JZVideoPlayerStandard.goOnPlayOnPause();
@@ -524,10 +469,10 @@ public class Fragment_Watch extends Fragment implements View.OnClickListener {
 
 //                contentsVO = DataBaseHandler.getInstance(dialog.getContext()).read(category, index);
 
-                question1 = (TextView)dialog.findViewById(R.id.question1);
-                question2 = (TextView)dialog.findViewById(R.id.question2);
-                title1 = (TextView)dialog.findViewById(R.id.title1);
-                title2 = (TextView)dialog.findViewById(R.id.title2);
+                TextView question1 = (TextView) dialog.findViewById(R.id.question1);
+                TextView question2 = (TextView) dialog.findViewById(R.id.question2);
+                TextView title1 = (TextView) dialog.findViewById(R.id.title1);
+                TextView title2 = (TextView) dialog.findViewById(R.id.title2);
 
                 if(contentsVO.getQuestion2().equals("")){
                     title1.setText("질문");
@@ -548,7 +493,7 @@ public class Fragment_Watch extends Fragment implements View.OnClickListener {
                 }
                 question2.setText(tmp);
 
-                button = (ImageButton)dialog.findViewById(R.id.button_finish);
+                ImageButton button = (ImageButton) dialog.findViewById(R.id.button_finish);
                 button.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -556,10 +501,10 @@ public class Fragment_Watch extends Fragment implements View.OnClickListener {
                     }
                 });
 
-                window = dialog.getWindow();
-                params = window.getAttributes();
-                windowManager = (WindowManager)view.getContext().getSystemService(view.getContext().WINDOW_SERVICE);
-                display = windowManager.getDefaultDisplay();
+                Window window = dialog.getWindow();
+                WindowManager.LayoutParams params = window.getAttributes();
+                WindowManager windowManager = (WindowManager) view.getContext().getSystemService(view.getContext().WINDOW_SERVICE);
+                Display display = windowManager.getDefaultDisplay();
                 params.gravity = Gravity.TOP;
                 params.y = 120;
                 params.x = 0;

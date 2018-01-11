@@ -1,16 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center_vertical">
 
-    <com.wang.avi.AVLoadingIndicatorView
-        android:layout_width="wrap_content"
+    <ImageView
+        android:id="@+id/logo"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        app:indicatorName="BallPulseIndicator" />
-    <!--https://github.com/81813780/AVLoadingIndicatorView-->
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="125dp"
+        android:padding="50dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/logo" />
 
-</LinearLayout>
+        <!--https://github.com/81813780/AVLoadingIndicatorView-->
+        <com.wang.avi.AVLoadingIndicatorView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            app:indicatorName="BallPulseIndicator"
+            android:layout_below="@+id/logo"/>
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:text="Copyright.cccvlm all rights resrved"
+            android:gravity="center"
+            android:layout_marginBottom="30dp"/>
+    </RelativeLayout>
