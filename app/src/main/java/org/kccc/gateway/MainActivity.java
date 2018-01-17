@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,6 +16,9 @@ import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.google.firebase.messaging.FirebaseMessaging;
 
@@ -30,7 +34,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //    private Button myVideo;
 //    private Button info;
 
-    private ArrayList<Button> TabBtn;
+    private ArrayList<ImageButton> TabBtn;
+    ArrayList<TextView> TabBtnText;
 
     private static Context context;
 
@@ -63,10 +68,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         context = this;
-        TabBtn = new ArrayList<Button>();
-        TabBtn.add(0,(Button)findViewById(R.id.Home));
-        TabBtn.add(1,(Button)findViewById(R.id.Video));
-        TabBtn.add(2,(Button)findViewById(R.id.Info));
+        TabBtn = new ArrayList<ImageButton>();
+        TabBtn.add(0,(ImageButton)findViewById(R.id.Home));
+        TabBtn.add(1,(ImageButton)findViewById(R.id.Video));
+        TabBtn.add(2,(ImageButton)findViewById(R.id.Info));
+
+        TabBtnText = new ArrayList<TextView>();
+        TabBtnText.add((TextView)findViewById(R.id.Home_txt));
+        TabBtnText.add((TextView)findViewById(R.id.Video_txt));
+        TabBtnText.add((TextView)findViewById(R.id.Info_txt));
 
 //        home = (Button)findViewById(R.id.Home);
 //        myVideo = (Button)findViewById(R.id.Video);
@@ -78,6 +88,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         for(int i=0; i<TabBtn.size(); i++){
             TabBtn.get(i).setOnClickListener(this);
+            TabBtnText.get(i).setOnClickListener(this);
         }
 
         Home_Category = getIntent().getBooleanExtra("Home_Category", true);
@@ -91,19 +102,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         JZVideoPlayerStandard.goOnPlayOnPause();
         switch (v.getId()){
-            case R.id.Home:
+            case R.id.Home:case R.id.Home_txt:
                 fragmentReplaceWithHome(); //fragmentReplaceWithHome();
                 break;
-            case R.id.Video:
+            case R.id.Video:case R.id.Video_txt:
                 fragmentReplaceWithMyVideo(0);
                 break;
-            case R.id.Info:
+            case R.id.Info:case R.id.Info_txt:
                 fragmentReplaceWithInfo();
                 break;
         }
     }
-    private void btnImgChange(Button btn,int drawable){
-        btn.setCompoundDrawablesWithIntrinsicBounds(null,getResources().getDrawable(drawable),null,null);
+    private void btnImgChange(ImageButton btn,int drawable){
+        btn.setImageDrawable(getResources().getDrawable(drawable));
+//        btn.setCompoundDrawablesWithIntrinsicBounds(null,getResources().getDrawable(drawable),null,null);
     }
     public void tabIconSelect(int TabNum){
         int[] tabBtnImgOff = {R.drawable.house,R.drawable.video,R.drawable.info};
@@ -111,8 +123,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         for(int i=0; i<TabBtn.size(); i++){
             if(TabNum==i){
+                TabBtnText.get(i).setTextColor(getResources().getColor(R.color.onText));
                 btnImgChange(TabBtn.get(i),tabBtnImgOn[i]);
             }else{
+                TabBtnText.get(i).setTextColor(getResources().getColor(R.color.offText));
                 btnImgChange(TabBtn.get(i),tabBtnImgOff[i]);
             }
         }
