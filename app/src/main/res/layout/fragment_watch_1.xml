@@ -275,7 +275,7 @@
                 android:text="Description Description Description Description Description Description Description Description"
                 android:textSize="13sp"
                 android:textColor="#878787"
-                android:lineSpacingExtra="4dp"/>
+                android:lineSpacingExtra="5dp"/>
         </ScrollView>
     </RelativeLayout>
 
