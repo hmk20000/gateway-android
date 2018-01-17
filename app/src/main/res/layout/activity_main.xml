@@ -42,7 +42,7 @@
                 android:paddingTop="0dp"
                 android:scaleType="centerInside"
                 android:src="@drawable/house_click"
-                android:textColor="@color/onText"
+                android:textColor="@color/lightGray"
                 tools:ignore="NestedWeights" />
 
             <TextView
@@ -73,7 +73,7 @@
                 android:paddingTop="0dp"
                 android:scaleType="centerInside"
                 android:src="@drawable/video"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/white"
                 tools:ignore="NestedWeights" />
 
             <TextView
@@ -84,7 +84,7 @@
                 android:paddingBottom="0dp"
                 android:paddingTop="0dp"
                 android:text="MY VIDEOS"
-                android:textColor="@color/offText"
+                android:textColor="@color/darkGray"
                 android:textSize="10sp"
                 tools:ignore="SmallSp" />
         </LinearLayout>
@@ -116,7 +116,7 @@
                 android:paddingBottom="0dp"
                 android:paddingTop="0dp"
                 android:text="INFO"
-                android:textColor="@color/offText"
+                android:textColor="@color/darkGray"
                 android:textSize="10sp"
                 tools:ignore="SmallSp" />
         </LinearLayout>

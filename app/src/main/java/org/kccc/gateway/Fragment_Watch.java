@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Environment;
@@ -144,9 +145,9 @@ public class Fragment_Watch extends Fragment implements View.OnClickListener {
     private void setContents(LayoutInflater inflater, ViewGroup container){
         Typeface typeface = Typeface.createFromAsset(getActivity().getAssets(),"fonts/nanumgothic.ttf");
         Typeface typefaceBold = Typeface.createFromAsset(getActivity().getAssets(),"fonts/nanumgothicbold.ttf");
-
+        TextView keyWord;
         switch (contentsVO.getCategory()){
-            case 0:
+            case 0:case 1:case 2:
                 view = inflater.inflate(R.layout.fragment_watch_1, container, false);
 //            contentsVO = DataBaseHandler.getInstance(view.getContext()).read(category, index);
 //                keyWord = (TextView) view.findViewById(R.id.keyWord);
@@ -154,13 +155,14 @@ public class Fragment_Watch extends Fragment implements View.OnClickListener {
                 LinearLayout linearLayout = view.findViewById(R.id.keyword_list);
 
                 String[] array = contentsVO.getKeyWord().replace(" ","").split(",");
-                TextView keyWord = view.findViewById(R.id.keyword_contents);
+                keyWord = view.findViewById(R.id.keyword_contents);
                 for(String cha:array){
                     TextView tmpTextView = new TextView(getActivity());
                     tmpTextView.setText("#"+cha);
                     tmpTextView.setLayoutParams(keyWord.getLayoutParams());
                     tmpTextView.setBackground(keyWord.getBackground());
                     tmpTextView.setTextColor(keyWord.getTextColors());
+                    tmpTextView.setPadding(20,5,30,10);
 
                     linearLayout.addView(tmpTextView);
                 }
@@ -170,23 +172,27 @@ public class Fragment_Watch extends Fragment implements View.OnClickListener {
                 Button next = (Button) view.findViewById(R.id.nextBtn);
                 question.setOnClickListener(this);
                 next.setOnClickListener(this);
+                question.setTypeface(typefaceBold);
+                next.setTypeface(typefaceBold);
                 TextView time = (TextView) view.findViewById(R.id.time);
                 time.setText(contentsVO.getTime());
                 time.setTypeface(typeface);
                 break;
-            case 1:case 2:
-                view = inflater.inflate(R.layout.fragment_watch_2, container, false);
-//            contentsVO = DataBaseHandler.getInstance(view.getContext()).read(category, index);
-                question = (Button)view.findViewById(R.id.questionBtn);
-                next = (Button)view.findViewById(R.id.nextBtn);
-                question.setOnClickListener(this);
-                next.setOnClickListener(this);
-                break;
+//            case 1:case 2:
+//                view = inflater.inflate(R.layout.fragment_watch_2, container, false);
+////            contentsVO = DataBaseHandler.getInstance(view.getContext()).read(category, index);
+//                question = (Button)view.findViewById(R.id.questionBtn);
+//                next = (Button)view.findViewById(R.id.nextBtn);
+//                question.setOnClickListener(this);
+//                next.setOnClickListener(this);
+//                break;
             case 3:case 4:
-                view = inflater.inflate(R.layout.fragment_watch_3, container, false);
+                view = inflater.inflate(R.layout.fragment_watch_1, container, false);
                 time = (TextView)view.findViewById(R.id.time);
                 time.setText(contentsVO.getTime());
                 time.setTypeface(typeface);
+                keyWord = view.findViewById(R.id.keyword_contents);
+                ((ViewGroup) keyWord.getParent()).removeView(keyWord);
 //            contentsVO = DataBaseHandler.getInstance(view.getContext()).read(category, index);
                 break;
         }

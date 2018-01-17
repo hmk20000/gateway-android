@@ -123,10 +123,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         for(int i=0; i<TabBtn.size(); i++){
             if(TabNum==i){
-                TabBtnText.get(i).setTextColor(getResources().getColor(R.color.onText));
+                TabBtnText.get(i).setTextColor(getResources().getColor(R.color.white));
                 btnImgChange(TabBtn.get(i),tabBtnImgOn[i]);
             }else{
-                TabBtnText.get(i).setTextColor(getResources().getColor(R.color.offText));
+                TabBtnText.get(i).setTextColor(getResources().getColor(R.color.lightGray));
                 btnImgChange(TabBtn.get(i),tabBtnImgOff[i]);
             }
         }

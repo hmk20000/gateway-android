@@ -8,7 +8,7 @@
     android:background="@color/background">
     <!--android:background="#1B1B1B">-->
     <RelativeLayout
-        android:background="#1B1B1B"
+        android:background="@color/background"
         android:id="@+id/actionbar"
         android:orientation="horizontal"
         android:layout_height="wrap_content"
@@ -20,7 +20,7 @@
             android:id="@+id/backBtn"
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:background="#1B1B1B"
+            android:background="@color/background"
             android:scaleType="fitXY"
             android:src="@drawable/arrow_left"
             android:layout_marginStart="10dp"
@@ -62,112 +62,138 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
     </RelativeLayout>
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_below="@+id/videoView"
-        android:id="@+id/relativeLayout">
-
-        <ImageButton
-            android:id="@+id/favoriteBtn"
-            android:layout_width="24dp"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_gravity="left"
-            android:layout_marginRight="15dp"
-            android:layout_toLeftOf="@+id/downloadBtn"
-            android:layout_toStartOf="@+id/downloadBtn"
-            android:background="#1B1B1B"
-            android:scaleType="fitCenter"
-            android:src="@drawable/star" />
-
-        <ImageButton
-            android:id="@+id/downloadBtn"
-            android:layout_width="24dp"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/favoriteBtn"
-            android:layout_gravity="left"
-            android:layout_marginEnd="15dp"
-            android:layout_marginRight="15dp"
-            android:layout_toLeftOf="@+id/shareBtn"
-            android:layout_toStartOf="@+id/shareBtn"
-            android:background="#1B1B1B"
-            android:scaleType="fitCenter"
-            android:src="@drawable/save" />
-
-        <com.mikhaellopez.circularprogressbar.CircularProgressBar
-            android:id="@+id/yourCircularProgressbar"
-            android:layout_width="30dp"
-            android:layout_height="wrap_content"
-            android:layout_alignEnd="@+id/downloadBtn"
-            android:layout_alignLeft="@+id/downloadBtn"
-            android:layout_alignRight="@+id/downloadBtn"
-            android:layout_alignStart="@+id/downloadBtn"
-            android:layout_centerVertical="true"
-            android:layout_gravity="left"
-            app:cpb_background_progressbar_color="#4b4b4b"
-            app:cpb_background_progressbar_width="5dp"
-            app:cpb_progressbar_color="#000000"
-            app:cpb_progressbar_width="5dp" />
-
-        <ImageButton
-            android:id="@+id/shareBtn"
-            android:layout_width="24dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignTop="@+id/downloadBtn"
-            android:layout_gravity="left"
-            android:layout_marginRight="10dp"
-            android:layout_weight="1"
-            android:background="#1B1B1B"
-            android:scaleType="fitCenter"
-            android:src="@drawable/share" />
-
+        android:id="@+id/relativeLayout"
+        android:orientation="horizontal"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="10dp">
 
         <RelativeLayout
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
             android:layout_marginLeft="20dp"
-            android:layout_marginStart="20dp">
+            android:layout_marginStart="20dp"
+            android:layout_weight="1">
 
-            <TextView
-                android:id="@+id/Main_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:text="되돌리기3"
-                android:textColor="#ffffff"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+                <HorizontalScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/Title_box"
+                    android:scrollbars="none">
 
-            <TextView
-                android:id="@+id/subTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/Main_title"
-                android:layout_toEndOf="@+id/Main_title"
-                android:layout_toRightOf="@+id/Main_title"
-                android:text="(Ctrl+Z)"
-                android:textColor="#ffffff"
-                android:textSize="13sp" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_below="@+id/centerLine"
+                        android:orientation="horizontal"
+                        android:paddingBottom="0dp"
+                        android:paddingTop="0dp">
+
+                        <TextView
+                            android:id="@+id/Main_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentStart="true"
+                            android:text="되돌리기3"
+                            android:textColor="#ffffff"
+                            android:textSize="20sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/subTitle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignBottom="@+id/Main_title"
+                            android:layout_toEndOf="@+id/Main_title"
+                            android:layout_toRightOf="@+id/Main_title"
+                            android:text="(Ctrl+Z)"
+                            android:textColor="#ffffff"
+                            android:textSize="20sp" />
+                    </LinearLayout>
+
+                </HorizontalScrollView>
+
+
 
             <TextView
                 android:id="@+id/time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/Main_title"
+                android:layout_below="@+id/Title_box"
                 android:paddingBottom="0dp"
                 android:paddingTop="3dp"
                 android:text="key time"
                 android:textColor="#878787"
-                android:textSize="10dp" />
+                android:textSize="13sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="130dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/favoriteBtn"
+                android:layout_width="24dp"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_gravity="left"
+                android:layout_marginRight="15dp"
+                android:layout_toLeftOf="@+id/downloadBtn"
+                android:layout_toStartOf="@+id/downloadBtn"
+                android:background="@color/background"
+                android:scaleType="fitCenter"
+                android:src="@drawable/star" />
+
+            <ImageButton
+                android:id="@+id/downloadBtn"
+                android:layout_width="24dp"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/favoriteBtn"
+                android:layout_gravity="left"
+                android:layout_marginEnd="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_toLeftOf="@+id/shareBtn"
+                android:layout_toStartOf="@+id/shareBtn"
+                android:background="@color/background"
+                android:scaleType="fitCenter"
+                android:src="@drawable/save" />
+
+            <com.mikhaellopez.circularprogressbar.CircularProgressBar
+                android:id="@+id/yourCircularProgressbar"
+                android:layout_width="30dp"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/downloadBtn"
+                android:layout_alignLeft="@+id/downloadBtn"
+                android:layout_alignRight="@+id/downloadBtn"
+                android:layout_alignStart="@+id/downloadBtn"
+                android:layout_centerVertical="true"
+                android:layout_gravity="left"
+                app:cpb_background_progressbar_color="#4b4b4b"
+                app:cpb_background_progressbar_width="5dp"
+                app:cpb_progressbar_color="#000000"
+                app:cpb_progressbar_width="5dp" />
+
+            <ImageButton
+                android:id="@+id/shareBtn"
+                android:layout_width="24dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignTop="@+id/downloadBtn"
+                android:layout_gravity="left"
+                android:layout_marginRight="20dp"
+                android:layout_weight="1"
+                android:background="@color/background"
+                android:scaleType="fitCenter"
+                android:src="@drawable/share" />
         </RelativeLayout>
 
 
-    </RelativeLayout>
+    </LinearLayout>
 
     <RelativeLayout
         android:id="@+id/relativeLayout2"
@@ -212,20 +238,22 @@
             <LinearLayout
                 android:id="@+id/keyword_list"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"
+                android:layout_height="wrap_content"
                 android:layout_below="@+id/centerLine"
-                android:paddingTop="10dp"
-                android:paddingBottom="0dp">
+                android:orientation="horizontal"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp">
+
                 <TextView
                     android:id="@+id/keyword_contents"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="10dp"
-                    android:padding="3dp"
-                    android:textColor="#96CBD3"
                     android:background="@drawable/custom_keyword_background"
-                    android:text="KEYWORD"/>
+                    android:padding="3dp"
+                    android:text="KEYWORD"
+                    android:textColor="#96CBD3"
+                    android:visibility="invisible" />
             </LinearLayout>
 
         </HorizontalScrollView>
@@ -246,7 +274,8 @@
                 android:layout_height="wrap_content"
                 android:text="Description Description Description Description Description Description Description Description"
                 android:textSize="13sp"
-                android:textColor="#878787" />
+                android:textColor="#878787"
+                android:lineSpacingExtra="4dp"/>
         </ScrollView>
     </RelativeLayout>
 
@@ -268,7 +297,7 @@
             android:text="Question"
             android:textSize="15dp"
             android:textStyle="bold"
-            android:textColor="#96CBD3"
+            android:textColor="#484848"
             android:layout_weight="1"
             android:id="@+id/questionBtn" />
         <Button
@@ -280,7 +309,7 @@
             android:text="Next"
             android:textSize="15dp"
             android:textStyle="bold"
-            android:textColor="#96CBD3"
+            android:textColor="#484848"
             android:layout_weight="1"
             android:id = "@+id/nextBtn"/>
     </LinearLayout>
