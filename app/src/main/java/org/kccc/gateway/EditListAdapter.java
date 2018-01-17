@@ -68,7 +68,7 @@ public class EditListAdapter extends RecyclerView.Adapter<EditListHolder>  {
                         else if(flag == 2)
                             DataBaseHandler.getInstance(context).updateDownload(contentsVO);
 */
-                        ((MainActivity)context).fragmentReplaceWithMyVideoEdit(flag);
+//                        ((MainActivity)context).fragmentReplaceWithMyVideoEdit(flag);
                     }
                 });
                 alert.setMessage("정말로 지우시겠습니까?");

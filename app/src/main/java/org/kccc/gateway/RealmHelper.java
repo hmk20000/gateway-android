@@ -24,6 +24,19 @@ public class RealmHelper {
     static int DOWNLOAD = 2;
     private String[] fieldName = {"favorite","history","download"};
 
+    public ContentsVO getContentsVO(int category, int index){
+        Realm realm = Realm.getDefaultInstance();
+
+        ContentsVO RealmContentsVO = realm.where(ContentsVO.class)
+                .equalTo("category",category)
+                .equalTo("index",index)
+                .findFirst();
+        ContentsVO rtnContentsVO = realm.copyFromRealm(RealmContentsVO);
+
+        realm.close();
+
+        return rtnContentsVO;
+    }
     public boolean FirstTimeCheck(){
         boolean rtn = true;
 

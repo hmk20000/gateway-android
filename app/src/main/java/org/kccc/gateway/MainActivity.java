@@ -43,7 +43,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private String BeforeState = "Home";
     private int Category = 0;
 
-    private boolean Category_Edit = true;
     private boolean Home_Category = true;
 
     private ContentsVO contentsVO;
@@ -78,14 +77,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         TabBtnText.add((TextView)findViewById(R.id.Home_txt));
         TabBtnText.add((TextView)findViewById(R.id.Video_txt));
         TabBtnText.add((TextView)findViewById(R.id.Info_txt));
-
-//        home = (Button)findViewById(R.id.Home);
-//        myVideo = (Button)findViewById(R.id.Video);
-//        info = (Button)findViewById(R.id.Info);
-
-//        home.setOnClickListener(this);
-//        myVideo.setOnClickListener(this);
-//        info.setOnClickListener(this);
 
         for(int i=0; i<TabBtn.size(); i++){
             TabBtn.get(i).setOnClickListener(this);
@@ -132,105 +123,49 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         }
     }
-    /*프래그 먼트를 전환하는 함수들*/
-    public void fragmentReplaceWithHome() {
-        Fragment newFragment = new Fragment_Home();
-        CurState = "Home";
+    public void fragmentReplace(Fragment newFragment){
         // replace fragment
         final FragmentTransaction transaction = getFragmentManager().beginTransaction();
-
         transaction.replace(R.id.main_fragment, newFragment);
         transaction.addToBackStack(null);
-
         // Commit the transaction
         transaction.commit();
-
+    }
+    /*프래그 먼트를 전환하는 함수들*/
+    public void fragmentReplaceWithHome() {
+        CurState = "Home";
+        Fragment newFragment = new Fragment_Home();
+        fragmentReplace(newFragment);
         tabIconSelect(0);
     }
     public void fragmentReplaceWithCategory(int category) {
-        Fragment newFragment = new Fragment_Category(category);
-        CurState = "Category";
         Category = category;
-        // replace fragment
-        final FragmentTransaction transaction = getFragmentManager().beginTransaction();
-
-        transaction.replace(R.id.main_fragment, newFragment);
-        transaction.addToBackStack(null);
-
-        // Commit the transaction
-        transaction.commit();
-
+        CurState = "Category";
+        Fragment newFragment = new Fragment_Category(category);
+        fragmentReplace(newFragment);
     }
     public void fragmentReplaceWithMyVideo(int flag) {
-        Fragment newFragment = new Fragment_MyVideos(flag);
-        CurState = "MyVideo";
         myVideoFlag = flag;
-//        Flag = flag;
-        // replace fragment
-        final FragmentTransaction transaction = getFragmentManager().beginTransaction();
-
-        transaction.replace(R.id.main_fragment, newFragment);
-        transaction.addToBackStack(null);
-
-        // Commit the transaction
-        transaction.commit();
-
-        tabIconSelect(1);
-    }
-    public void fragmentReplaceWithMyVideoEdit(int flag) {
-        Fragment newFragment = new Fragment_MyVideos_Edit(flag);
-        CurState = "MyVideoEdit";
-//        Flag = flag;
-        final FragmentTransaction transaction = getFragmentManager().beginTransaction();
-
-        transaction.replace(R.id.main_fragment, newFragment);
-        transaction.addToBackStack(null);
-
-        // Commit the transaction
-        transaction.commit();
-
+        CurState = "MyVideo";
+        Fragment newFragment = new Fragment_MyVideos(flag);
+        fragmentReplace(newFragment);
         tabIconSelect(1);
     }
     public void fragmentReplaceWithInfo() {
-        Fragment newFragment = new Fragment_Info();
-//        Fragment newFragment = new Fragment_Setting();
         CurState = "Info";
-
-        final FragmentTransaction transaction = getFragmentManager().beginTransaction();
-
-        transaction.replace(R.id.main_fragment, newFragment);
-        transaction.addToBackStack(null);
-
-        // Commit the transaction
-        transaction.commit();
-
+        Fragment newFragment = new Fragment_Info();
+        fragmentReplace(newFragment);
         tabIconSelect(2);
     }
     public void fragmentReplaceWithWatch(int category, int position, boolean category_edit, int flag) {
 
-        Realm realm = Realm.getDefaultInstance();
+        RealmHelper realmHelper = new RealmHelper();
+        contentsVO = realmHelper.getContentsVO(category,position);
 
-        final ContentsVO RealmcontentsVO = realm.where(ContentsVO.class)
-                .equalTo("category",category)
-                .equalTo("index",position)
-                .findFirst();
-
-
-        contentsVO = realm.copyFromRealm(RealmcontentsVO);
-        String fileName = contentsVO.getTitle();
-        String URL = contentsVO.getURL();
-
-        realm.close();
-
-//        String fileName = DataBaseHandler.getInstance(this).read(category, position).getTitle();
-//        String URL = DataBaseHandler.getInstance(this).read(category, position).getURL();
-
-//        Fragment newFragment = new Fragment_Watch(category, position, URL, fileName, flag);
         Fragment newFragment = new Fragment_Watch(contentsVO, flag);
         BeforeState = CurState;
         CurState = "Watch";
         Category = category;
-        Category_Edit = category_edit;
 
         SharedPreferences videoPref = getSharedPreferences("videoPos", MODE_PRIVATE);
         SharedPreferences.Editor videoEditor = videoPref.edit();
@@ -266,46 +201,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 alert.setMessage("정말 종료하시겠습니까?");
                 alert.show();
                 break;
-            case "Category":
+            case "Category": case "MyVideo":
                 fragmentReplaceWithHome();
-                break;
-            case "MyVideo":
-                fragmentReplaceWithHome();
-//                fragmentReplaceWithMyVideo(myVideoFlag);
-//        else if(CurState.equals("MyVideoEdit"))
-//            fragmentReplaceWithMyVideo(Flag);
                 break;
             case "Info":
                 fragmentReplaceWithHome();
                 break;
             case "Watch":
-//                boolean fullScreen = (getWindow().getAttributes().flags & WindowManager.LayoutParams.FLAG_FULLSCREEN) != 0;
-//                boolean forceNotFullScreen = (getWindow().getAttributes().flags & WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN) != 0;
-//                boolean actionbarVisible = getActionBar().isShowing();
                 boolean fullScreen = (getWindow().getAttributes().flags & WindowManager.LayoutParams.FLAG_FULLSCREEN) != 0;
                 if(fullScreen){
-                    Log.d("Fullscreen Test", " OK ");
-//                    JZVideoPlayerStandard.goOnPlayOnPause();
-//                    JZVideoPlayerStandard.quitFullscreenOrTinyWindow();
+                    //stop Fullscreen, keep play
                     JZVideoPlayerManager.getFirstFloor().backPress();
                 }else{
-                    Log.d("Fullscreen Test", " NO ");
                     JZVideoPlayerStandard.goOnPlayOnPause();
                     if(BeforeState.equals("MyVideo")){
                         fragmentReplaceWithMyVideo(myVideoFlag);
                     }else {
                         fragmentReplaceWithCategory(Category);
                     }
-
-//                    SharedPreferences videoPref = getSharedPreferences("videoPos", MODE_PRIVATE);;
-//                    SharedPreferences.Editor videoEditor;
-//                    videoEditor = videoPref.edit();
-//                    videoEditor.putBoolean("curPlay", false);
-//                    videoEditor.commit();
-//                    if(Category_Edit)
-//                        fragmentReplaceWithCategory(Category);
-//            else
-//                fragmentReplaceWithMyVideo(Flag);
                 }
 
                 Log.d("Fullscreen Test", " Before break; ");
