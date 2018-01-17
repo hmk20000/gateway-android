@@ -1,17 +1,21 @@
 package org.kccc.gateway;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.Fragment;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -31,6 +35,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mikhaellopez.circularprogressbar.CircularProgressBar;
 import com.yanzhenjie.permission.AndPermission;
@@ -103,35 +108,14 @@ public class Fragment_Watch extends Fragment implements View.OnClickListener {
     @Override
     public void onResume() {
         super.onResume();
-
-//        setVideoPos();
-//        isPlaying = videoPref.getBoolean("curPlay", false);
-//        if(isPlaying) {
-//            videoView.start();
-//        }
-
-//        videoEditor = videoPref.edit();
-//        videoEditor.putInt("curPos",curPos);
-//        videoEditor.commit();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-//        Realm realm = Realm.getDefaultInstance();
-//
-//        final ContentsVO realmContentsVO = realm.where(ContentsVO.class)
-//                .equalTo("category",contentsVO.getCategory())
-//                .equalTo("index",contentsVO.getIndex())
-//                .findFirst();
-//
-//        this.contentsVO = realm.copyFromRealm(realmContentsVO);
-
         MOVIE_URL = "http://cccvlm.com/sfproject/movies/kor/" + contentsVO.getURL();
 
         super.onCreateView(inflater, container, savedInstanceState);
-
-
         setContents(inflater,container);
 
         back.setOnClickListener(this);
@@ -145,13 +129,11 @@ public class Fragment_Watch extends Fragment implements View.OnClickListener {
     private void setContents(LayoutInflater inflater, ViewGroup container){
         Typeface typeface = Typeface.createFromAsset(getActivity().getAssets(),"fonts/nanumgothic.ttf");
         Typeface typefaceBold = Typeface.createFromAsset(getActivity().getAssets(),"fonts/nanumgothicbold.ttf");
+
         TextView keyWord;
         switch (contentsVO.getCategory()){
             case 0:case 1:case 2:
                 view = inflater.inflate(R.layout.fragment_watch_1, container, false);
-//            contentsVO = DataBaseHandler.getInstance(view.getContext()).read(category, index);
-//                keyWord = (TextView) view.findViewById(R.id.keyWord);
-//                keyWord.setText(contentsVO.getKeyWord());
                 LinearLayout linearLayout = view.findViewById(R.id.keyword_list);
 
                 String[] array = contentsVO.getKeyWord().replace(" ","").split(",");
@@ -197,14 +179,7 @@ public class Fragment_Watch extends Fragment implements View.OnClickListener {
                 break;
         }
 
-//        MOVIE_INTERNAL_PATH = view.getContext().getFilesDir().getAbsolutePath()+"/"+fileName+".mp4";
-//        MOVIE_INTERNAL_PATH = Environment.getExternalStorageDirectory() + "/Android/data/org.kccc.gateway/cache/"+fileName+".mp4";
         MOVIE_INTERNAL_PATH = Environment.getExternalStorageDirectory() + "/Android/data/org.kccc.gateway/cache/"+App.md5(contentsVO.getTitle().getBytes());
-
-//        isError = false;
-
-//        videoPref = view.getContext().getSharedPreferences("videoPos", view.getContext().MODE_PRIVATE);
-//        downloadPref = PreferenceManager.getDefaultSharedPreferences(view.getContext());
 
         TextView titleBar = (TextView) view.findViewById(R.id.titleBar);
         TextView title = (TextView) view.findViewById(R.id.Main_title);
@@ -226,7 +201,9 @@ public class Fragment_Watch extends Fragment implements View.OnClickListener {
 //        circularProgressBar.setBackgroundProgressBarWidth(getResources().getDimension(R.dimen.backgroundProgressBarWidth));
         circularProgressBar.setVisibility(View.INVISIBLE);
 
-        setVideoPath(contentsVO,view);
+        jzVideoPlayerStandard = (JZVideoPlayerStandard) view.findViewById(R.id.videoplayer);
+        setVideoPath(contentsVO);
+
         titleBar.setText(contentsVO.getTitle());
         title.setText(contentsVO.getTitle());
 //        title.setText("test");
@@ -253,12 +230,10 @@ public class Fragment_Watch extends Fragment implements View.OnClickListener {
         description.setTypeface(typeface);
     }
 
-    public void setVideoPath(ContentsVO contentsVO, View view){
+    public void setVideoPath(ContentsVO contentsVO){
 
-        //다운로드
-        String Play_url = contentsVO.getDownload()==1?MOVIE_INTERNAL_PATH:MOVIE_URL;
-
-        jzVideoPlayerStandard = (JZVideoPlayerStandard) view.findViewById(R.id.videoplayer);
+        //download check ->
+        String Play_url = contentsVO.getDownload()==1 ? MOVIE_INTERNAL_PATH : MOVIE_URL;
         jzVideoPlayerStandard.setUp(Play_url, JZVideoPlayerStandard.SCREEN_WINDOW_NORMAL);
 //                , JZVideoPlayerStandard.SCREEN_WINDOW_NORMAL, contentsVO.getTitle());
 
@@ -268,51 +243,8 @@ public class Fragment_Watch extends Fragment implements View.OnClickListener {
         jzVideoPlayerStandard.thumbImageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         JZVideoPlayer.setJzUserAction(new MyUserActionStandard());
         JZVideoPlayer.SAVE_PROGRESS = false;
-//        JZVideoPlayer.FULLSCREEN_ORIENTATION = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
-
-//        jzVideoPlayerStandard.thumbImageView.setImage("http://p.qpic.cn/videoyun/0/2449_43b6f696980311e59ed467f22794e792_1/640");
-
-
-        File file = new File(MOVIE_INTERNAL_PATH);
-//        if(!file.exists())
-//            contentsVO.setDownload(0);
-//        videoView.setVideoPath(contentsVO.getURL());
-//        if(contentsVO.getDownload()==0)
-
-//            videoView.setVideoURI(Uri.parse(MOVIE_URL));
-//        else
-//            videoView.setVideoPath(MOVIE_INTERNAL_PATH);
-
-//        videoView.setOnErrorListener(new MediaPlayer.OnErrorListener() {
-//            @Override
-//            public boolean onError(MediaPlayer mp, int what, int extra) {
-//                AlertDialog.Builder alert = new AlertDialog.Builder(Fragment_Watch.this.view.getContext());
-//                alert.setPositiveButton("확인", new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        isError = true;
-//                        dialog.dismiss();
-//                    }
-//                });
-//                alert.setMessage("다운받은 영상이 없을 경우 오프라인에서 재생할수 없습니다.");
-//                alert.show();
-//                return true;
-//            }
-//        });
     }
 
-
-
-    public void setVideoPos(){
-//        curPos = videoPref.getInt("curPos", 0);
-//        if(videoPref.getInt("curPos", 0) == 0)
-//            videoView.seekTo(curPos+100);
-//        else
-//            videoView.seekTo(curPos-100);
-//        if(!isPlaying)
-//            videoView.setBackgroundDrawable(new ThumbnailHandler(view.getContext()).setThumbnail(category, index));
-
-    }
     private void initializationNextData() {
 //        List<NextVO> dbQuestionList = DataBaseHandler.getInstance(view.getContext()).readNextQuestionList(category, index);
         List<NextVO> dbQuestionList = contentsVO.getNext();
@@ -335,28 +267,11 @@ public class Fragment_Watch extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-
-//        Realm realm = Realm.getDefaultInstance();
-//
-//        final ContentsVO realmContentsVO = realm.where(ContentsVO.class)
-//                .equalTo("category",this.contentsVO.getCategory())
-//                .equalTo("index",this.contentsVO.getIndex())
-//                .findFirst();
-
-        RealmHelper realmHelper = new RealmHelper();
-
+        final RealmHelper realmHelper = new RealmHelper();
         Intent intent;
-//        videoEditor = videoPref.edit();
-//        downloadEditor = downloadPref.edit();
-
 
         switch (v.getId()){
             case R.id.backBtn:
-//                JZVideoPlayerManager.
-//                jzVideoPlayerStandard.
-
-                //videoEditor.putBoolean("curPlay", false);
-                //videoEditor.commit();
                 if(myVideoFlag<4)
                     ((MainActivity)view.getContext()).fragmentReplaceWithMyVideo(myVideoFlag);
                 else
@@ -382,9 +297,6 @@ public class Fragment_Watch extends Fragment implements View.OnClickListener {
                     favorite.setImageDrawable(getResources().getDrawable(R.drawable.star));
                 }
 
-//                realm.commitTransaction();
-
-
                 realmHelper.saveContents(contentsVO);
 
                 break;
@@ -392,20 +304,53 @@ public class Fragment_Watch extends Fragment implements View.OnClickListener {
             case R.id.downloadBtn:
 
 
-                //PermissionCheck
-                //https://github.com/yanzhenjie/AndPermission
+                //----- ----- PermissionCheck
+                //----- https://github.com/yanzhenjie/AndPermission
                 AndPermission.with(MainActivity.getActivity())
                         .requestCode(100)
                         .permission(Permission.STORAGE)
 //                        .callback(listener)
                         .start();
 
-                DownloadStart(MOVIE_URL);
-                contentsVO.setDownload(1);
-                contentsVO.setDownloadDate(System.currentTimeMillis());
 
-                realmHelper.saveContents(contentsVO);
+
+
                 //wifi check
+                ConnectivityManager cm =
+                        (ConnectivityManager)MainActivity.getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+
+                NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+                boolean isConnected = activeNetwork != null &&
+                        activeNetwork.isConnectedOrConnecting();
+                if (contentsVO.getDownload() != 1) {
+                    if(isConnected){
+                        boolean isWiFi = activeNetwork.getType() == ConnectivityManager.TYPE_WIFI;
+                        if(!isWiFi){
+
+                            final AlertDialog.Builder alert = new AlertDialog.Builder(view.getContext());
+                            alert.setNegativeButton("아니오", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();     //닫기
+                                }
+                            });
+                            alert.setPositiveButton("네", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    DownloadStart(MOVIE_URL);
+
+                                    dialog.dismiss();
+                                }
+                            });
+                            alert.setMessage("Wi-Fi 환경이 아닙니다. 그래도 다운로드 하시겠습니까?");
+                            alert.show();
+                        }
+                    }
+                } else {
+                    //todo 이미 다운로드
+                    Toast.makeText(view.getContext(), "이미 다운로드 하셨습니다.", Toast.LENGTH_LONG).show();
+                }
+
 //                if(wifi.isConnected()) {
 //                    if (contentsVO.getDownload() == 0) {
 //                        contentsVO.setDownload(1);
@@ -606,8 +551,8 @@ public class Fragment_Watch extends Fragment implements View.OnClickListener {
 
                         int animationDuration = 0; // 2500ms = 2,5s
 
-                        percent *= 100;
-                        circularProgressBar.setProgress(percent);
+//                        percent *= 100;
+                        circularProgressBar.setProgress(percent*100);
 
 //                      circularProgressBar.setProgressWithAnimation(100 * percent, animationDuration); // Default duration = 1500ms
 
@@ -620,12 +565,21 @@ public class Fragment_Watch extends Fragment implements View.OnClickListener {
                         super.onUIProgressFinish();
                         download.setVisibility(View.VISIBLE);
                         circularProgressBar.setVisibility(View.INVISIBLE);
+
+
+                        contentsVO.setDownload(1);
+                        contentsVO.setDownloadDate(System.currentTimeMillis());
+
+                        RealmHelper realmHelper = new RealmHelper();
+                        realmHelper.saveContents(contentsVO);
+
+                        setVideoPath(contentsVO);
+
 //                        Noty();
 
                         Log.e("TAG", "onUIProgressFinish:");
                         //Toast.makeText(MainActivity.getActivity(), "结束上传", Toast.LENGTH_SHORT).show();
                     }
-
                 });
                 //read the body to file
                 BufferedSource source = responseBody.source();
