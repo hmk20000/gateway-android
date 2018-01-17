@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static Context context;
 
     private String CurState = "Home";
+    private String BeforeState = "Home";
     private int Category = 0;
 
     private boolean Category_Edit = true;
@@ -47,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private ContentsVO contentsVO;
 
-    public static int myVideoFlag = 0;
+    private int myVideoFlag = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -163,6 +164,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void fragmentReplaceWithMyVideo(int flag) {
         Fragment newFragment = new Fragment_MyVideos(flag);
         CurState = "MyVideo";
+        myVideoFlag = flag;
 //        Flag = flag;
         // replace fragment
         final FragmentTransaction transaction = getFragmentManager().beginTransaction();
@@ -225,6 +227,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 //        Fragment newFragment = new Fragment_Watch(category, position, URL, fileName, flag);
         Fragment newFragment = new Fragment_Watch(contentsVO, flag);
+        BeforeState = CurState;
         CurState = "Watch";
         Category = category;
         Category_Edit = category_edit;
@@ -267,7 +270,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 fragmentReplaceWithHome();
                 break;
             case "MyVideo":
-                fragmentReplaceWithMyVideo(myVideoFlag);
+                fragmentReplaceWithHome();
+//                fragmentReplaceWithMyVideo(myVideoFlag);
 //        else if(CurState.equals("MyVideoEdit"))
 //            fragmentReplaceWithMyVideo(Flag);
                 break;
@@ -287,7 +291,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }else{
                     Log.d("Fullscreen Test", " NO ");
                     JZVideoPlayerStandard.goOnPlayOnPause();
-                    fragmentReplaceWithCategory(Category);
+                    if(BeforeState.equals("MyVideo")){
+                        fragmentReplaceWithMyVideo(myVideoFlag);
+                    }else {
+                        fragmentReplaceWithCategory(Category);
+                    }
 
 //                    SharedPreferences videoPref = getSharedPreferences("videoPos", MODE_PRIVATE);;
 //                    SharedPreferences.Editor videoEditor;
