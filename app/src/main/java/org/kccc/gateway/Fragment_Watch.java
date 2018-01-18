@@ -12,7 +12,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -33,7 +32,6 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -51,7 +49,6 @@ import cn.jzvd.JZVideoPlayer;
 import cn.jzvd.JZVideoPlayerStandard;
 import io.github.lizhangqu.coreprogress.ProgressHelper;
 import io.github.lizhangqu.coreprogress.ProgressUIListener;
-import io.realm.Realm;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
@@ -87,7 +84,7 @@ public class Fragment_Watch extends Fragment implements View.OnClickListener {
 
     private CircularProgressBar circularProgressBar;
 
-    JZVideoPlayerStandard jzVideoPlayerStandard;
+    MyJZVideoPlayerStandard jzVideoPlayerStandard;
 
     private ContentsVO contentsVO;
 
@@ -104,6 +101,11 @@ public class Fragment_Watch extends Fragment implements View.OnClickListener {
         setHasOptionsMenu(false);
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        JZVideoPlayer.releaseAllVideos();
+    }
 
     @Override
     public void onResume() {
@@ -201,7 +203,7 @@ public class Fragment_Watch extends Fragment implements View.OnClickListener {
 //        circularProgressBar.setBackgroundProgressBarWidth(getResources().getDimension(R.dimen.backgroundProgressBarWidth));
         circularProgressBar.setVisibility(View.INVISIBLE);
 
-        jzVideoPlayerStandard = (JZVideoPlayerStandard) view.findViewById(R.id.videoplayer);
+        jzVideoPlayerStandard = (MyJZVideoPlayerStandard) view.findViewById(R.id.videoplayer);
         setVideoPath(contentsVO);
 
         titleBar.setText(contentsVO.getTitle());
@@ -232,16 +234,17 @@ public class Fragment_Watch extends Fragment implements View.OnClickListener {
 
     public void setVideoPath(ContentsVO contentsVO){
 
+
+        //    https://github.com/lipangit/JiaoZiVideoPlayer
         //download check ->
         String Play_url = contentsVO.getDownload()==1 ? MOVIE_INTERNAL_PATH : MOVIE_URL;
-        jzVideoPlayerStandard.setUp(Play_url, JZVideoPlayerStandard.SCREEN_WINDOW_NORMAL);
+        jzVideoPlayerStandard.setUp(Play_url, JZVideoPlayerStandard.SCREEN_WINDOW_NORMAL,contentsVO);
 //                , JZVideoPlayerStandard.SCREEN_WINDOW_NORMAL, contentsVO.getTitle());
 
         Bitmap thumbImage = new ThumbnailHandler(this.view.getContext()).getBitmapThumbnail(contentsVO,512);
         thumbImage = new BitmapControlHelper().fastblur(thumbImage, (float) 1.0,20);
         jzVideoPlayerStandard.thumbImageView.setImageBitmap(thumbImage);
         jzVideoPlayerStandard.thumbImageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        JZVideoPlayer.setJzUserAction(new MyUserActionStandard());
         JZVideoPlayer.SAVE_PROGRESS = false;
     }
 
@@ -344,6 +347,8 @@ public class Fragment_Watch extends Fragment implements View.OnClickListener {
                             });
                             alert.setMessage("Wi-Fi 환경이 아닙니다. 그래도 다운로드 하시겠습니까?");
                             alert.show();
+                        }else{
+                            DownloadStart(MOVIE_URL);
                         }
                     }
                 } else {
@@ -351,55 +356,6 @@ public class Fragment_Watch extends Fragment implements View.OnClickListener {
                     Toast.makeText(view.getContext(), "이미 다운로드 하셨습니다.", Toast.LENGTH_LONG).show();
                 }
 
-//                if(wifi.isConnected()) {
-//                    if (contentsVO.getDownload() == 0) {
-//                        contentsVO.setDownload(1);
-//                        contentsVO.setDownloadDate(System.currentTimeMillis());
-//                        DataBaseHandler.getInstance(view.getContext()).updateDownload(contentsVO);
-//
-//                        downloadEditor.putString("url", MOVIE_URL);
-//                        downloadEditor.putString("fileName", fileName);
-//                        downloadEditor.commit();
-//
-//                        intent = new Intent("org.kccc.gateway.DownloadService");
-//                        intent.setPackage(view.getContext().getPackageName());
-//                        view.getContext().startService(intent);
-//                    } else if (contentsVO.getDownload() == 1) {
-//                        Toast.makeText(view.getContext(), "이미 다운로드 하셨습니다.", Toast.LENGTH_LONG).show();
-//                    }
-//                }
-//                else{
-//                    final AlertDialog.Builder alert = new AlertDialog.Builder(view.getContext());
-//                    alert.setNegativeButton("아니오", new DialogInterface.OnClickListener() {
-//                        @Override
-//                        public void onClick(DialogInterface dialog, int which) {
-//                            dialog.dismiss();     //닫기
-//                        }
-//                    });
-//                    alert.setPositiveButton("네", new DialogInterface.OnClickListener() {
-//                        @Override
-//                        public void onClick(DialogInterface dialog, int which) {
-//                            if (contentsVO.getDownload() == 0) {
-//                                contentsVO.setDownload(1);
-//                                contentsVO.setDownloadDate(System.currentTimeMillis());
-//                                DataBaseHandler.getInstance(view.getContext()).updateDownload(contentsVO);
-//
-//                                downloadEditor.putString("url", MOVIE_URL);
-//                                downloadEditor.putString("fileName", fileName);
-//                                downloadEditor.commit();
-//
-//                                Intent downIntent = new Intent("org.kccc.gateway.DownloadService");
-//                                downIntent.setPackage(view.getContext().getPackageName());
-//                                view.getContext().startService(downIntent);
-//                            } else if (contentsVO.getDownload() == 1) {
-//                                Toast.makeText(view.getContext(), "이미 다운로드 하셨습니다.", Toast.LENGTH_LONG).show();
-//                            }
-//                            dialog.dismiss();
-//                        }
-//                    });
-//                    alert.setMessage("Wi-Fi 환경이 아닙니다. 그래도 다운로드 하시겠습니까?");
-//                    alert.show();
-//                }
                 break;
 
             case R.id.shareBtn:
@@ -614,78 +570,5 @@ public class Fragment_Watch extends Fragment implements View.OnClickListener {
         builder.setNumber(999);
         notificationManager.notify(0, builder.build());
 
-    }
-
-    //    https://github.com/lipangit/JiaoZiVideoPlayer
-    class MyUserActionStandard implements JZUserActionStandard {
-
-        @Override
-        public void onEvent(int type, Object url, int screen, Object... objects) {
-            //Event case check - [ ]
-            switch (type) {
-                case JZUserAction.ON_CLICK_START_ICON:
-                    Log.d("JZplayer play", "onEvent: start!");
-
-                    Realm realm = Realm.getDefaultInstance();
-                    realm.beginTransaction();
-                    final ContentsVO realmContentsVO = realm.where(ContentsVO.class)
-                            .equalTo("category",contentsVO.getCategory())
-                            .equalTo("index",contentsVO.getIndex())
-                            .findFirst();
-                    realmContentsVO.setHistory(1);
-                    realmContentsVO.setHistoryDate(System.currentTimeMillis());
-                    realm.commitTransaction();
-                    realm.close();
-
-//                    Log.i("USER_EVENT", "ON_CLICK_START_ICON" + " title is : " + (objects.length == 0 ? "" : objects[0]) + " url is : " + url + " screen is : " + screen);
-                    break;
-//                case JZUserAction.ON_CLICK_START_ERROR:
-//                    Log.i("USER_EVENT", "ON_CLICK_START_ERROR" + " title is : " + (objects.length == 0 ? "" : objects[0]) + " url is : " + url + " screen is : " + screen);
-//                    break;
-//                case JZUserAction.ON_CLICK_START_AUTO_COMPLETE:
-//                    Log.i("USER_EVENT", "ON_CLICK_START_AUTO_COMPLETE" + " title is : " + (objects.length == 0 ? "" : objects[0]) + " url is : " + url + " screen is : " + screen);
-//                    break;
-//                case JZUserAction.ON_CLICK_PAUSE:
-//                    Log.i("USER_EVENT", "ON_CLICK_PAUSE" + " title is : " + (objects.length == 0 ? "" : objects[0]) + " url is : " + url + " screen is : " + screen);
-//                    break;
-//                case JZUserAction.ON_CLICK_RESUME:
-//                    Log.i("USER_EVENT", "ON_CLICK_RESUME" + " title is : " + (objects.length == 0 ? "" : objects[0]) + " url is : " + url + " screen is : " + screen);
-//                    break;
-//                case JZUserAction.ON_SEEK_POSITION:
-//                    Log.i("USER_EVENT", "ON_SEEK_POSITION" + " title is : " + (objects.length == 0 ? "" : objects[0]) + " url is : " + url + " screen is : " + screen);
-//                    break;
-//                case JZUserAction.ON_AUTO_COMPLETE:
-//                    Log.i("USER_EVENT", "ON_AUTO_COMPLETE" + " title is : " + (objects.length == 0 ? "" : objects[0]) + " url is : " + url + " screen is : " + screen);
-//                    break;
-//                case JZUserAction.ON_ENTER_FULLSCREEN:
-//                    Log.i("USER_EVENT", "ON_ENTER_FULLSCREEN" + " title is : " + (objects.length == 0 ? "" : objects[0]) + " url is : " + url + " screen is : " + screen);
-//                    break;
-//                case JZUserAction.ON_QUIT_FULLSCREEN:
-//                    Log.i("USER_EVENT", "ON_QUIT_FULLSCREEN" + " title is : " + (objects.length == 0 ? "" : objects[0]) + " url is : " + url + " screen is : " + screen);
-//                    break;
-//                case JZUserAction.ON_ENTER_TINYSCREEN:
-//                    Log.i("USER_EVENT", "ON_ENTER_TINYSCREEN" + " title is : " + (objects.length == 0 ? "" : objects[0]) + " url is : " + url + " screen is : " + screen);
-//                    break;
-//                case JZUserAction.ON_QUIT_TINYSCREEN:
-//                    Log.i("USER_EVENT", "ON_QUIT_TINYSCREEN" + " title is : " + (objects.length == 0 ? "" : objects[0]) + " url is : " + url + " screen is : " + screen);
-//                    break;
-//                case JZUserAction.ON_TOUCH_SCREEN_SEEK_VOLUME:
-//                    Log.i("USER_EVENT", "ON_TOUCH_SCREEN_SEEK_VOLUME" + " title is : " + (objects.length == 0 ? "" : objects[0]) + " url is : " + url + " screen is : " + screen);
-//                    break;
-//                case JZUserAction.ON_TOUCH_SCREEN_SEEK_POSITION:
-//                    Log.i("USER_EVENT", "ON_TOUCH_SCREEN_SEEK_POSITION" + " title is : " + (objects.length == 0 ? "" : objects[0]) + " url is : " + url + " screen is : " + screen);
-//                    break;
-//
-//                case JZUserActionStandard.ON_CLICK_START_THUMB:
-//                    Log.i("USER_EVENT", "ON_CLICK_START_THUMB" + " title is : " + (objects.length == 0 ? "" : objects[0]) + " url is : " + url + " screen is : " + screen);
-//                    break;
-//                case JZUserActionStandard.ON_CLICK_BLANK:
-//                    Log.i("USER_EVENT", "ON_CLICK_BLANK" + " title is : " + (objects.length == 0 ? "" : objects[0]) + " url is : " + url + " screen is : " + screen);
-//                    break;
-//                default:
-//                    Log.i("USER_EVENT", "unknow");
-//                    break;
-            }
-        }
     }
 }

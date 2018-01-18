@@ -3,7 +3,9 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/gateway-android.iml" filepath="$PROJECT_DIR$/gateway-android.iml" />
+      <module fileurl="file://C:\Users\hmk20\Desktop\ming\ccc\VLM\project\gateway\android\source\gateway\gateway\app\app.iml" filepath="C:\Users\hmk20\Desktop\ming\ccc\VLM\project\gateway\android\source\gateway\gateway\app\app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/gateway.iml" filepath="$PROJECT_DIR$/gateway.iml" />
+      <module fileurl="file://C:\Users\hmk20\Desktop\ming\ccc\VLM\project\gateway\android\source\gateway\gateway\gateway-android.iml" filepath="C:\Users\hmk20\Desktop\ming\ccc\VLM\project\gateway\android\source\gateway\gateway\gateway-android.iml" />
     </modules>
   </component>
 </project>
