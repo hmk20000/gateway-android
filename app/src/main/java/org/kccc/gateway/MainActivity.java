@@ -110,12 +110,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //        btn.setCompoundDrawablesWithIntrinsicBounds(null,getResources().getDrawable(drawable),null,null);
     }
     public void tabIconSelect(int TabNum){
-        int[] tabBtnImgOff = {R.drawable.house,R.drawable.video,R.drawable.info};
-        int[] tabBtnImgOn = {R.drawable.house_click,R.drawable.video_click,R.drawable.info_click};
+        int[] tabBtnImgOff = {R.drawable.ic_home_off,R.drawable.ic_video_off,R.drawable.ic_info_off};
+        int[] tabBtnImgOn = {R.drawable.ic_home_on,R.drawable.ic_video_on,R.drawable.ic_info_on};
 
         for(int i=0; i<TabBtn.size(); i++){
             if(TabNum==i){
-                TabBtnText.get(i).setTextColor(getResources().getColor(R.color.white));
+                TabBtnText.get(i).setTextColor(getResources().getColor(R.color.point));
                 btnImgChange(TabBtn.get(i),tabBtnImgOn[i]);
             }else{
                 TabBtnText.get(i).setTextColor(getResources().getColor(R.color.lightGray));

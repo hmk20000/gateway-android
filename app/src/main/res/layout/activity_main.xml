@@ -24,7 +24,7 @@
         android:background="@color/background"
         android:orientation="horizontal"
         android:paddingBottom="10dp"
-        android:paddingTop="10dp">
+        android:paddingTop="0dp">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -41,7 +41,7 @@
                 android:background="@color/background"
                 android:paddingTop="0dp"
                 android:scaleType="centerInside"
-                android:src="@drawable/house_click"
+                android:src="@drawable/ic_home_on"
                 android:textColor="@color/lightGray"
                 tools:ignore="NestedWeights" />
 
@@ -53,6 +53,7 @@
                 android:paddingBottom="0dp"
                 android:paddingTop="0dp"
                 android:text="HOME"
+                android:textColor="@color/point"
                 android:textSize="10sp"
                 tools:ignore="SmallSp" />
         </LinearLayout>
@@ -72,7 +73,7 @@
                 android:background="@color/background"
                 android:paddingTop="0dp"
                 android:scaleType="centerInside"
-                android:src="@drawable/video"
+                android:src="@drawable/ic_video_off"
                 android:textColor="@color/white"
                 tools:ignore="NestedWeights" />
 
@@ -84,7 +85,7 @@
                 android:paddingBottom="0dp"
                 android:paddingTop="0dp"
                 android:text="MY VIDEOS"
-                android:textColor="@color/darkGray"
+                android:textColor="@color/lightGray"
                 android:textSize="10sp"
                 tools:ignore="SmallSp" />
         </LinearLayout>
@@ -104,7 +105,7 @@
                 android:background="@color/background"
                 android:paddingTop="0dp"
                 android:scaleType="centerInside"
-                android:src="@drawable/info"
+                android:src="@drawable/ic_info_off"
                 android:textColor="#FFFFFF"
                 tools:ignore="NestedWeights" />
 
@@ -116,7 +117,7 @@
                 android:paddingBottom="0dp"
                 android:paddingTop="0dp"
                 android:text="INFO"
-                android:textColor="@color/darkGray"
+                android:textColor="@color/lightGray"
                 android:textSize="10sp"
                 tools:ignore="SmallSp" />
         </LinearLayout>
