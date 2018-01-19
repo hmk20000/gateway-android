@@ -2,6 +2,8 @@ package org.kccc.gateway;
 
 import android.annotation.SuppressLint;
 import android.app.Fragment;
+import android.content.res.Resources;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.realm.Realm;
@@ -25,15 +28,7 @@ import io.realm.RealmResults;
 @SuppressLint("ValidFragment")
 public class Fragment_MyVideos extends Fragment implements View.OnClickListener {
     private View view;
-//    private Button edit;
-    private Button favorite;
-    private Button history;
-    private Button download;
     private RecyclerView categoryListView;
-    private ImageView line;
-
-    private CategoryListAdapter categoryListAdapter;
-    private RecyclerView.LayoutManager categoryListLayoutManager;
 
     private List<ContentsVO> list;
     private int flag;
@@ -100,22 +95,17 @@ public class Fragment_MyVideos extends Fragment implements View.OnClickListener 
         //
 
 //        edit = (Button)view.findViewById(R.id.editBtn);
-        favorite = (Button)view.findViewById(R.id.favoriteBtn);
-        history = (Button)view.findViewById(R.id.historyBtn);
-        download = (Button)view.findViewById(R.id.downloadBtn);
+        Button favorite = (Button) view.findViewById(R.id.favoriteBtn);
+        Button history = (Button) view.findViewById(R.id.historyBtn);
+        Button download = (Button) view.findViewById(R.id.downloadBtn);
 
-        if(flag == RealmHelper.FAVORITE)
-            line = (ImageView)view.findViewById(R.id.favoriteLine);
-        else if(flag == RealmHelper.HISTORY)
-            line = (ImageView)view.findViewById(R.id.historyLine);
-        else
-            line = (ImageView)view.findViewById(R.id.downloadLine);
+        ArrayList<ImageView> line = new ArrayList<ImageView>();
+        line.add(0,(ImageView)view.findViewById(R.id.favoriteLine));
+        line.add(1,(ImageView)view.findViewById(R.id.historyLine));
+        line.add(2,(ImageView)view.findViewById(R.id.downloadLine));
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            line.setBackground(view.getResources().getDrawable(R.drawable.underlinetrue));
-        }
+        tabSelect(line,flag);
 
-//        edit.setOnClickListener(this);
         favorite.setOnClickListener(this);
         history.setOnClickListener(this);
         download.setOnClickListener(this);
@@ -125,45 +115,43 @@ public class Fragment_MyVideos extends Fragment implements View.OnClickListener 
 
         return view;
     }
+
     private void initializationData() {
         RealmHelper realmHelper = new RealmHelper();
         this.list = realmHelper.getMyVideos(flag);
     }
     private void initializationListView() {
 
-        categoryListLayoutManager = new LinearLayoutManager(view.getContext());
+        RecyclerView.LayoutManager categoryListLayoutManager = new LinearLayoutManager(view.getContext());
         categoryListView.setLayoutManager(categoryListLayoutManager);
         if(list!=null){
-            categoryListAdapter = new CategoryListAdapter(view.getContext(), list, flag);
+            CategoryListAdapter categoryListAdapter = new CategoryListAdapter(view.getContext(), list, flag);
             categoryListView.setAdapter(categoryListAdapter);
+        }
+    }
+    private void tabSelect(ArrayList<ImageView> line, int select){
+        Resources resource = MainActivity.getActivity().getResources();
+        int pointColor = resource.getColor(R.color.point);
+        int backgroundColor = resource.getColor(R.color.darkGray);
+        for (int i=0; i<line.size(); i++){
+            if(i == select){
+                line.get(i).setBackgroundColor(pointColor);
+            }else {
+                line.get(i).setBackgroundColor(backgroundColor);
+            }
         }
     }
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-//            case R.id.editBtn:
-//                ((MainActivity) view.getContext()).fragmentReplaceWithMyVideoEdit(flag);
-//                break;
             case R.id.favoriteBtn:
                 ((MainActivity) view.getContext()).fragmentReplaceWithMyVideo(0);
-                if(flag!=0)
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                        line.setBackground(view.getResources().getDrawable(R.drawable.underlinefalse));
-                    }
                 break;
             case R.id.historyBtn:
                 ((MainActivity) view.getContext()).fragmentReplaceWithMyVideo(1);
-                if(flag!=1)
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                        line.setBackground(view.getResources().getDrawable(R.drawable.underlinefalse));
-                    }
                 break;
             case R.id.downloadBtn:
                 ((MainActivity) view.getContext()).fragmentReplaceWithMyVideo(2);
-                if(flag!=2)
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                        line.setBackground(view.getResources().getDrawable(R.drawable.underlinefalse));
-                    }
                 break;
         }
     }
