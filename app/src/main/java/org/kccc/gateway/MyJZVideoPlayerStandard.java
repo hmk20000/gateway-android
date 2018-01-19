@@ -5,6 +5,10 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
+import cn.jzvd.JZMediaManager;
+import cn.jzvd.JZUserAction;
+import cn.jzvd.JZVideoPlayer;
+import cn.jzvd.JZVideoPlayerManager;
 import cn.jzvd.JZVideoPlayerStandard;
 import io.realm.Realm;
 
@@ -23,10 +27,13 @@ public class MyJZVideoPlayerStandard extends JZVideoPlayerStandard {
     public MyJZVideoPlayerStandard(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
-
+    @Override
+    public void onClick(View v) {
+        super.onClick(v);
+    }
     @Override
     public void startVideo() {
-
+        contentsVO = Fragment_Watch.contentsVO;
         Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
         final ContentsVO realmContentsVO = realm.where(ContentsVO.class)
@@ -43,7 +50,6 @@ public class MyJZVideoPlayerStandard extends JZVideoPlayerStandard {
 
     @Override
     public void setUp(Object[] dataSourceObjects, int defaultUrlMapIndex, int screen, Object... objects) {
-        contentsVO = (ContentsVO)objects[0];
         super.setUp(dataSourceObjects, defaultUrlMapIndex, screen);
     }
 }

@@ -86,12 +86,12 @@ public class Fragment_Watch extends Fragment implements View.OnClickListener {
 
     MyJZVideoPlayerStandard jzVideoPlayerStandard;
 
-    private ContentsVO contentsVO;
+    public static ContentsVO contentsVO;
 
     public Fragment_Watch(){}
 
     public Fragment_Watch(ContentsVO contentsVO, int myVideoFlag) {
-        this.contentsVO = contentsVO;
+        Fragment_Watch.contentsVO = contentsVO;
         this.myVideoFlag = myVideoFlag;
     }
 
@@ -238,7 +238,7 @@ public class Fragment_Watch extends Fragment implements View.OnClickListener {
         //    https://github.com/lipangit/JiaoZiVideoPlayer
         //download check ->
         String Play_url = contentsVO.getDownload()==1 ? MOVIE_INTERNAL_PATH : MOVIE_URL;
-        jzVideoPlayerStandard.setUp(Play_url, JZVideoPlayerStandard.SCREEN_WINDOW_NORMAL,contentsVO);
+        jzVideoPlayerStandard.setUp(Play_url, JZVideoPlayerStandard.SCREEN_WINDOW_NORMAL);
 //                , JZVideoPlayerStandard.SCREEN_WINDOW_NORMAL, contentsVO.getTitle());
 
         Bitmap thumbImage = new ThumbnailHandler(this.view.getContext()).getBitmapThumbnail(contentsVO,512);
