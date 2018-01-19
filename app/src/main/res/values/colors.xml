@@ -8,6 +8,8 @@
     <color name="lightGray">#616161</color>
     <color name="middleGray">#212121</color>
     <color name="darkGray">#1b1b1b</color>
+
+    <color name="textGray">#8b8b8b</color>
     <color name="white">#ffffff</color>
 
     <color name="point">#e8abc6</color>

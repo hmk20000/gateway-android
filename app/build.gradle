@@ -5,8 +5,8 @@ android {
     defaultConfig {
         applicationId "org.kccc.gateway"
         minSdkVersion 16
-        targetSdkVersion 26
-        versionCode 11
+        targetSdkVersion 24
+        versionCode 12
         versionName "2.0.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
