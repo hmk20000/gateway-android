@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.util.Log;
 
@@ -91,7 +90,7 @@ public class LoadingActivity extends Activity {
     {
 
         Log.d("Thread Start", "Thread Start~!");
-
+/*
         String fileName = "되돌리기";
         String file_path = Environment.getExternalStorageDirectory() + "/gateway/"+fileName+".mp4";
         File files = new File(file_path);
@@ -100,13 +99,14 @@ public class LoadingActivity extends Activity {
             Log.d("File Test", "backgroundThreadProcessing: "+files.exists());
 //            moveFile()
         }
+*/
 
         Realm.init(this);
         RealmConfiguration config = new RealmConfiguration.Builder().build();
         Realm.setDefaultConfiguration(config);
         Realm realm = Realm.getDefaultInstance();
 
-        ContentsVO[] contentsVOList = null;
+        ContentsVO[] contentsVOList;
         RealmResults<ContentsVO> OldRealm = realm.where(ContentsVO.class).findAll();
         List<ContentsVO> OldData = realm.copyFromRealm(OldRealm);
 
@@ -133,14 +133,16 @@ public class LoadingActivity extends Activity {
                 if (OldData.size() == 0) {
 //                if (currentTmp == null) {
                     //realm 이 없을 경우. 기기에 있는 파일을 이용
-                    byte[] data = readAssetFile("media_list.json");
+                    byte[] data = readAssetFile();
                     String listString = new String(data);
 
                     contentsVOList = gson.fromJson(listString, ContentsVO[].class);
                     helper.saveContentsList(realm,contentsVOList);
                     Log.d("RealmGson", "Wifi disconnected But AssetFile Read Complete: "+contentsVOList[3].getTitle());
                 }else{
-                    //realm 이 있는 경우. Realm 을 이용
+                    //realm 이 있는 경우. 기존데이터를 이용
+                    contentsVOList = OldData.toArray(new ContentsVO[0]);
+                    helper.saveContentsList(realm,contentsVOList);
 //                    Log.d("RealmGson", "Wifi disconnected But Aready Realm Exist : "+currentTmp.getTitle());
                     Log.d("RealmGson", "Wifi disconnected But Aready Realm Exist : "+OldData.get(0).getTitle());
                 }
@@ -201,7 +203,7 @@ public class LoadingActivity extends Activity {
         Request request = new Request.Builder()
                 .url("http://cccvlm.com/API/gateway/android/"+version+"/index.php")
                 .build();
-        Response response = null;
+        Response response;
         String ServerJSON = null;
         try {
             response = client.newCall(request).execute();
@@ -215,17 +217,18 @@ public class LoadingActivity extends Activity {
         return ServerJSON;
     }
 
-    private byte[] readAssetFile(String assetName) {
+    private byte[] readAssetFile() {
         AssetManager assets = getResources().getAssets();
         byte[] data = null;
         try {
-            InputStream is = assets.open(assetName);
+            InputStream is = assets.open("media_list.json");
             int available = is.available();
             data = new byte[available];
             int readByte = is.read(data);
             is.close();
             if (readByte > 0) return data;
         } catch (IOException ignored) {
+            Log.d("readAssetFile", ignored.toString());
         }
         return data;
     }
